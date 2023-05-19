@@ -1,7 +1,7 @@
-const sellers = [
+const users = [
   {
     id: 0,
-    sellerName: "Jasmine",
+    userName: "Jasmine",
     email: "jasmine@gmail.com",
     password: "red",
     registeringDate: "",
@@ -17,7 +17,7 @@ const sellers = [
 
   {
     id: 1,
-    sellerName: "Sarah",
+    userName: "Sarah",
     email: "sarah@gmail.com",
     password: "blue",
     registeringDate: "",
@@ -33,7 +33,7 @@ const sellers = [
 
   {
     id: 2,
-    sellerName: "Emma",
+    userName: "Emma",
     email: "emma@gmail.com",
     password: "yellow",
     registeringDate: "",
@@ -50,12 +50,12 @@ const sellers = [
 
   {
     id: 3,
-    sellerName: "Alex",
+    userName: "Alex",
     email: "alex@gmail.com",
     password: "black",
     registeringDate: "",
     image:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS95t740XwECjf9UqEXOR1q3ovhxhqxlmVElw&usqp=CAU",
+      "https://images.healthshots.com/healthshots/en/uploads/2023/01/18175821/face-glow-770x436.jpg",
     rating: 4.95,
     city: "Bucuresti",
     birthYear: `2005`,
@@ -66,7 +66,7 @@ const sellers = [
 
   {
     id: 4,
-    sellerName: "Mia",
+    userName: "Mia",
     email: "mia@gmail.com",
     password: "white",
     registeringDate: "",
@@ -81,4 +81,4 @@ const sellers = [
   },
 ];
 
-export default sellers;
+export default users;
