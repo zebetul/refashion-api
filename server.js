@@ -6,6 +6,7 @@ import items from "./assets/items.js";
 import users from "./assets/users.js";
 import handleRegister from "./assets/controllers/register.js";
 import handleSignIn from "./assets/controllers/signIn.js";
+import handleProfileUpdate from "./assets/controllers/profile.js";
 
 const app = express();
 
@@ -24,13 +25,12 @@ const dataBase = knex({
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("I can hear you!");
-});
-
+app.get("/", (req, res) => res.send("I can hear you!"));
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
-
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
+app.post("/users/profile/:id", (req, res) =>
+  handleProfileUpdate(req, res, dataBase)
+);
 
 app.get("/products", (req, res) => {
   res.json(items);
