@@ -1,46 +1,5 @@
 const items = [
   {
-    id: 1,
-    seller: 4,
-    title: "2-piece cotton jersey set",
-    price: 89.95,
-    description:
-      "Set with a T-shirt in soft cotton jersey and a pair of shorts in lightweight sweatshirt fabric. T-shirt with a rib-trimmed neckline and dropped shoulders. Shorts with an elasticated, drawstring waist, discreet side pockets and an open back pocket.",
-    brand: "H&M",
-    category: "kids",
-    image:
-      "https://lp2.hm.com/hmgoepprod?set=format%5Bwebp%5D%2Cquality%5B79%5D%2Csource%5B%2F18%2F3b%2F183b47f6f611e50d85b92859f6067d0dabfea179.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5Bkids_boys_setsoutfits%5D%2Ctype%5BDESCRIPTIVESTILLLIFE%5D%2Cres%5Bm%5D%2Chmver%5B2%5D&call=url%5Bfile%3A%2Fproduct%2Fmain%5D",
-    rating: { rate: 3.9, count: 120 },
-    size: "S",
-  },
-  {
-    id: 2,
-    seller: 3,
-    title: "Mens Casual Premium Slim Fit T-Shirts ",
-    price: 22.3,
-    description:
-      "Slim-fitting style, contrast raglan long sleeve, three-button henley placket, light weight & soft fabric for breathable and comfortable wearing. And Solid stitched shirts with round neck made for durability and a great fit for casual fashion wear and diehard baseball fans. The Henley style round neckline includes a three-button placket.",
-    brand: "Nike",
-    category: "men",
-    image:
-      "https://fakestoreapi.com/img/71-3HjGNDUL._AC_SY879._SX._UX._SY._UY_.jpg",
-    rating: { rate: 4.1, count: 259 },
-    size: "S",
-  },
-  {
-    id: 3,
-    seller: 2,
-    title: "Mens Cotton Jacket",
-    price: 55.99,
-    description:
-      "great outerwear jackets for Spring/Autumn/Winter, suitable for many occasions, such as working, hiking, camping, mountain/rock climbing, cycling, traveling or other outdoors. Good gift choice for you or your family member. A warm hearted love to Father, husband or son in this thanksgiving or Christmas Day.",
-    brand: "Zara",
-    category: "men",
-    image: "https://fakestoreapi.com/img/71li-ujtlUL._AC_UX679_.jpg",
-    rating: { rate: 4.7, count: 500 },
-    size: "S",
-  },
-  {
     id: 4,
     seller: 1,
     title: "Mens Casual Slim Fit",
@@ -52,6 +11,11 @@ const items = [
     image: "https://fakestoreapi.com/img/71YXzeOuslL._AC_UY879_.jpg",
     rating: { rate: 2.1, count: 430 },
     size: "S",
+
+    /*
+    INSERT INTO items (userid, title, description, price, brand, category, size) 
+    VALUES (78, 'Mens Casual Slim Fit', 'The color could be slightly different between on the screen and in practice. / Please note that body builds vary by person, therefore, detailed size information should be reviewed below on the product description.', 15.99, 'ZARA', 'men', 'S');
+    */
   },
   {
     id: 5,
@@ -66,6 +30,17 @@ const items = [
       "https://lp2.hm.com/hmgoepprod?set=format%5Bwebp%5D%2Cquality%5B79%5D%2Csource%5B%2F0c%2Fee%2F0ceeafa428ceaab04db6f3cacfb9c3a88ff25a7c.jpg%5D%2Corigin%5Bdam%5D%2Ccategory%5B%5D%2Ctype%5BDESCRIPTIVESTILLLIFE%5D%2Cres%5Bm%5D%2Chmver%5B2%5D&call=url%5Bfile%3A%2Fproduct%2Fmain%5D",
     rating: { rate: 4.6, count: 400 },
     size: "M",
+
+    /*
+    INSERT INTO items (userid, title, description, price, brand, category, size) 
+    VALUES (78, 'Suit', 'Suit with a classic jacket and matching trousers in woven fabric. Two-button jacket with notch lapels, a fake pocket at the top and flap front pockets. Decorative buttons at the cuffs and a single back vent. Lined. Trousers with an adjustable, elasticated waist, concealed hook-and-eye fastener and zip fly. Side pockets, welt back pockets and tapered legs with creases.', 199.99, 'H&M', 'kids', 'M');
+
+    UPDATE users SET birthdate = COALESCE(birthdate, '1900-01-01'), city = COALESCE(city, ''),
+    languages = COALESCE(languages, ''),
+    preferredbrand = COALESCE(preferredbrand, ''),
+    rating = COALESCE(rating, 5.00)
+WHERE birthdate IS NULL OR city IS NULL OR languages IS NULL OR preferredbrand IS NULL OR rating IS NULL;
+    */
   },
   {
     id: 6,

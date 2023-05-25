@@ -4,7 +4,7 @@ const users = [
     userName: "Jasmine",
     email: "jasmine@gmail.com",
     password: "red",
-    registeringDate: "",
+    joined: "12.05.2023",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbwZ2QmjlShNNeUuEVF-RNFZrwJo3Y9k-LRw&usqp=CAU",
     rating: 4.86,
@@ -20,7 +20,7 @@ const users = [
     userName: "Sarah",
     email: "sarah@gmail.com",
     password: "blue",
-    registeringDate: "",
+    joined: "12.05.2023",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQbxz7V65gt6rzWxU4pjjDEZNJCi2toDZL8ZQ&usqp=CAU",
     rating: 4.21,
@@ -36,7 +36,7 @@ const users = [
     userName: "Emma",
     email: "emma@gmail.com",
     password: "yellow",
-    registeringDate: "",
+    joined: "12.05.2023",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4g9TPhaYT1c1UIxadaE7GGNJ3xkJhQyRP9A&usqp=CAU",
     rating: 3.86,
@@ -53,7 +53,7 @@ const users = [
     userName: "Alex",
     email: "alex@gmail.com",
     password: "black",
-    registeringDate: "",
+    joined: "12.05.2023",
     image:
       "https://images.healthshots.com/healthshots/en/uploads/2023/01/18175821/face-glow-770x436.jpg",
     rating: 4.95,
@@ -69,7 +69,7 @@ const users = [
     userName: "Mia",
     email: "mia@gmail.com",
     password: "white",
-    registeringDate: "",
+    joined: "12.05.2023",
     image:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRY8Ciz81RKukqj_unpdfGZI-rE0GpY1kR1ag&usqp=CAU",
     rating: 4.0,

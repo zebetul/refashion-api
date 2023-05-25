@@ -2,11 +2,14 @@ import express from "express";
 import bcrypt from "bcrypt";
 import cors from "cors";
 import knex from "knex";
-import items from "./assets/items.js";
 import users from "./assets/users.js";
 import handleRegister from "./assets/controllers/register.js";
 import handleSignIn from "./assets/controllers/signIn.js";
-import handleProfileUpdate from "./assets/controllers/profile.js";
+import {
+  handleProfileUpdate,
+  handleGetSeller,
+} from "./assets/controllers/profile.js";
+import handleItemsFetch from "./assets/controllers/items.js";
 
 const app = express();
 
@@ -31,10 +34,11 @@ app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
+app.get("/users/profile/:id", (req, res) =>
+  handleGetSeller(req, res, dataBase)
+);
 
-app.get("/products", (req, res) => {
-  res.json(items);
-});
+app.get("/items", (req, res) => handleItemsFetch(req, res, dataBase));
 
 app.get("/users", (req, res) => {
   res.json(users);
