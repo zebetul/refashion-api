@@ -2,14 +2,14 @@ import express from "express";
 import bcrypt from "bcrypt";
 import cors from "cors";
 import knex from "knex";
-import users from "./assets/users.js";
 import handleRegister from "./assets/controllers/register.js";
 import handleSignIn from "./assets/controllers/signIn.js";
 import {
   handleProfileUpdate,
-  handleGetSeller,
+  handleProfileGet,
 } from "./assets/controllers/profile.js";
-import handleItemsFetch from "./assets/controllers/items.js";
+import handleGetAllItems from "./assets/controllers/items.js";
+import handleMessage from "./assets/controllers/messages.js";
 
 const app = express();
 
@@ -29,21 +29,18 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) => res.send("I can hear you!"));
+app.get("/items", (req, res) => handleGetAllItems(req, res, dataBase));
+app.get("/users/profile/:id", (req, res) =>
+  handleProfileGet(req, res, dataBase)
+);
+
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
-app.get("/users/profile/:id", (req, res) =>
-  handleGetSeller(req, res, dataBase)
-);
-
-app.get("/items", (req, res) => handleItemsFetch(req, res, dataBase));
-
-app.get("/users", (req, res) => {
-  res.json(users);
-});
+app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
 
 app.listen(8000, () => {
-  console.log("server ON");
+  console.log("Server listening on port 8000");
 });

@@ -1,4 +1,4 @@
-const handleItemsFetch = async function (req, res, dataBase) {
+const handleGetAllItems = async function (req, res, dataBase) {
   try {
     // Joining the items and images tables together and extracting them
     const items = await dataBase("items")
@@ -11,5 +11,4 @@ const handleItemsFetch = async function (req, res, dataBase) {
     res.json("🔥🔥🔥 Database not responding");
   }
 };
-
-export default handleItemsFetch;
+export default handleGetAllItems;

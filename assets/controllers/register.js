@@ -1,21 +1,21 @@
 const handleRegister = async function (req, res, dataBase, bcrypt) {
-  const { userName, email, password, image } = req.body;
+  const { userName, email, password } = req.body;
 
   // INPUT VALIDATION
   if (!userName || !email || !password)
-    return res.json("Missing required fields");
+    return res.json("Missing required fields.");
 
   // Checking if email allready exists and returning response if so
   const existingEmail = await dataBase("login")
     .returning("*")
     .where("email", "=", email);
-  if (existingEmail.length > 0) return res.json("Email allready registered");
+  if (existingEmail.length > 0) return res.json("Email allready registered.");
 
   // Checking if userName allready exists and returning response if so
   const existingUserName = await dataBase("users")
     .returning("*")
     .where("name", "=", userName);
-  if (existingUserName.length > 0) return res.json("Username allready used");
+  if (existingUserName.length > 0) return res.json("Username allready used.");
 
   // Hashing provided password
   const hash = bcrypt.hashSync(password, 10);
@@ -33,7 +33,6 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
         name: userName,
         email: loginEmail[0].email,
         joined: new Date(),
-        image: image,
       });
 
       // responding with the newly registered user

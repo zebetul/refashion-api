@@ -22,21 +22,21 @@ export const handleProfileUpdate = async function (req, res, dataBase) {
   } catch (err) {
     console.error(err);
     // Server error
-    res.json("Update not succesfull, please try again later");
+    res.status(500).json("🔥🔥🔥Database error: not connecting");
   }
 };
 
-export const handleGetSeller = async function (req, res, dataBase) {
+export const handleProfileGet = async function (req, res, dataBase) {
   const { id } = req.params;
 
   try {
-    const seller = await dataBase("users").select("*").where("userid", "=", id);
+    const user = await dataBase("users").select("*").where("userid", "=", id);
 
-    seller.length
-      ? res.json(seller[0])
+    user.length
+      ? res.json(user[0])
       : res.json("Database error: user not found");
   } catch (err) {
-    console.log(err);
-    res.json("Database error: not connecting");
+    console.error(err);
+    res.status(500).json("🔥🔥🔥Database error: not connecting");
   }
 };
