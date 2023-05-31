@@ -2,6 +2,8 @@ import express from "express";
 import bcrypt from "bcrypt";
 import cors from "cors";
 import knex from "knex";
+import fileupload from "express-fileupload";
+
 import handleRegister from "./assets/controllers/register.js";
 import handleSignIn from "./assets/controllers/signIn.js";
 import {
@@ -10,6 +12,7 @@ import {
 } from "./assets/controllers/profile.js";
 import handleGetAllItems from "./assets/controllers/items.js";
 import handleMessage from "./assets/controllers/messages.js";
+import handleNewItem from "./assets/controllers/wardrobe.js";
 
 const app = express();
 
@@ -26,6 +29,7 @@ const dataBase = knex({
 });
 
 app.use(express.json());
+app.use(fileupload());
 app.use(cors());
 
 app.get("/", (req, res) => res.send("I can hear you!"));
@@ -40,6 +44,7 @@ app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
+app.post("/wardrobe", (req, res) => handleNewItem(req, res, dataBase));
 
 app.listen(8000, () => {
   console.log("Server listening on port 8000");

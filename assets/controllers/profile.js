@@ -14,9 +14,23 @@ export const handleProfileUpdate = async function (req, res, dataBase) {
       .where("userid", "=", id)
       .returning("*");
 
+    const messagesSent = await dataBase("messages")
+      .select("*")
+      .where("sender_id", "=", id);
+
+    const messagesReceived = await dataBase("messages")
+      .select("*")
+      .where("receiver_id", "=", id);
+
+    const response = {
+      ...user[0],
+      messagesSent: messagesSent,
+      messagesReceived: messagesReceived,
+    };
+
     return user.length
       ? // Succes
-        res.json(user[0])
+        res.json(response)
       : // User not found
         res.json("Update not successful, user not found");
   } catch (err) {
