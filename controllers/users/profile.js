@@ -9,7 +9,6 @@ export const handleProfileUpdate = async function (req, res, dataBase) {
         preferredbrand: req.body.preferredBrand,
         city: req.body.city,
         birthdate: req.body.birthDate,
-        image: req.body.image,
       })
       .where("userid", "=", id)
       .returning("*");

@@ -4,15 +4,16 @@ import cors from "cors";
 import knex from "knex";
 import fileupload from "express-fileupload";
 
-import handleRegister from "./assets/controllers/register.js";
-import handleSignIn from "./assets/controllers/signIn.js";
+import handleRegister from "./controllers/register.js";
+import handleSignIn from "./controllers/signIn.js";
 import {
   handleProfileUpdate,
   handleProfileGet,
-} from "./assets/controllers/profile.js";
-import handleGetAllItems from "./assets/controllers/items.js";
-import handleMessage from "./assets/controllers/messages.js";
-import handleNewItem from "./assets/controllers/wardrobe.js";
+} from "./controllers/users/profile.js";
+import handleGetAllItems from "./controllers/items.js";
+import handleMessage from "./controllers/messages.js";
+import handleNewItem from "./controllers/wardrobe.js";
+import handleImageUpload from "./controllers/users/image.js";
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
+app.post("/users/image", (req, res) => handleImageUpload(req, res, dataBase));
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
 app.post("/wardrobe", (req, res) => handleNewItem(req, res, dataBase));
 
