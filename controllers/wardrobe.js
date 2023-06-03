@@ -29,6 +29,9 @@ const handleNewItem = async function (req, res, dataBase) {
   };
   const response = await dataBase("images").insert(newImage);
 
-  res.json(newItem);
+  res.json({
+    ...newItem[0],
+    image: imageURL,
+  });
 };
 export default handleNewItem;
