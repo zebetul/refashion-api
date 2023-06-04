@@ -20,7 +20,9 @@ const handleNewItem = async function (req, res, dataBase) {
   const imageKey = `${userid}-${newItem[0].itemid}-${image.name}`;
 
   // Upload image to AWS S3 rfsimages bucket and get the URL
-  const imageURL = await uploadImageToAWS(image, "rfsimages", imageKey);
+  const imageURL = await uploadImageToAWS(image, "rfsimages", imageKey, {
+    itemID: newItem[0].itemid,
+  });
 
   // Insert image URL into images table
   const newImage = {

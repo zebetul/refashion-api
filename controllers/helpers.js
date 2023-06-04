@@ -6,10 +6,11 @@ import { fromIni } from "@aws-sdk/credential-provider-ini";
  * @param {Object} image file object
  * @param {String} bucket AWS S3 bucket
  * @param {String} key unique key for image needed for AWS upload
+ * @param {Object} metadata data about the image(userID or itemID)
  * @returns {String} image URL
  * @author Cristi Sebeni
  */
-export const uploadImageToAWS = async function (image, bucket, key) {
+export const uploadImageToAWS = async function (image, bucket, key, metadata) {
   const REGION = "eu-north-1";
   const s3Client = new S3Client({
     region: REGION,
@@ -22,6 +23,7 @@ export const uploadImageToAWS = async function (image, bucket, key) {
     Body: image.data,
     ContentDisposition: "inline",
     ContentType: "image/jpeg",
+    Metadata: metadata,
   };
 
   try {
