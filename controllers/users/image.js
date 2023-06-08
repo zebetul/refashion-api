@@ -5,17 +5,17 @@ const handleImageUpload = async function (req, res, dataBase) {
   const { userID } = req.body;
 
   // Create unique imageKey = userID
-  const imageKey = `${userID}.jpg`;
+  const imageKey = `userprofile-${userID}`;
 
   // Upload image to AWS S3 rfsimages bucket and get the URL
   const imageURL = await uploadImageToAWS(
-    imageFile,
+    [imageFile],
     "rfs-user-images",
-    imageKey,
-    {
-      userID: userID,
-    }
+    imageKey
   );
+
+  if (typeof imageURL !== "string")
+    return res.status(400).json("🔥🔥🔥 Fail to upload image to AWS!");
 
   // Insert image URL in database in users table
   const user = await dataBase("users")

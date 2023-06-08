@@ -2,7 +2,7 @@ import { uploadImageToAWS } from "./helpers.js";
 
 const handleNewItem = async function (req, res, dataBase) {
   const { title, brand, category, size, price, description, userid } = req.body;
-  const { image } = req.files;
+  const { images } = req.files;
 
   // Insert new item into items table in the database
   const item = {
@@ -17,23 +17,21 @@ const handleNewItem = async function (req, res, dataBase) {
   const newItem = await dataBase("items").insert(item).returning("*");
 
   // Create unique imageKey = 'userid-itemid-imageName'
-  const imageKey = `${userid}-${newItem[0].itemid}-${image.name}`;
+  const imageKey = `${userid}/item-${newItem[0].itemid}`;
 
   // Upload image to AWS S3 rfsimages bucket and get the URL
-  const imageURL = await uploadImageToAWS(image, "rfsimages", imageKey, {
-    itemID: newItem[0].itemid,
-  });
+  const imageURL = await uploadImageToAWS(images, "rfsimages", imageKey);
+
+  if (!imageURL.length)
+    return res.status(400).json("Fail to upload image to AWS!");
 
   // Insert image URL into images table
-  const newImage = {
-    itemid: newItem[0].itemid,
-    url: imageURL,
-  };
-  const response = await dataBase("images").insert(newImage);
+  const newImages = imageURL.map((url) => ({ itemid: newItem[0].itemid, url }));
+  const response = await dataBase("images").insert(newImages);
 
   res.json({
     ...newItem[0],
-    image: imageURL,
+    images: imageURL,
   });
 };
 export default handleNewItem;

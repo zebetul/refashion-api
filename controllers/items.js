@@ -2,8 +2,9 @@ const handleGetAllItems = async function (req, res, dataBase) {
   try {
     // Joining the items and images tables together and extracting them
     const items = await dataBase("items")
-      .select("items.*", "images.url AS image")
-      .leftJoin("images", "items.itemid", "images.itemid");
+      .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
+      .leftJoin("images", "items.itemid", "images.itemid")
+      .groupBy("items.itemid");
 
     items.length ? res.json(items) : res.json("Database responding with error");
   } catch (err) {

@@ -10,29 +10,33 @@ import { fromIni } from "@aws-sdk/credential-provider-ini";
  * @returns {String} image URL
  * @author Cristi Sebeni
  */
-export const uploadImageToAWS = async function (image, bucket, key, metadata) {
+export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
   const REGION = "eu-north-1";
   const s3Client = new S3Client({
     region: REGION,
     credentials: fromIni(),
   });
 
-  const params = {
-    Bucket: bucket,
-    Key: key,
-    Body: image.data,
-    ContentDisposition: "inline",
-    ContentType: "image/jpeg",
-    Metadata: metadata,
-  };
-
   try {
-    const response = await s3Client.send(new PutObjectCommand(params));
+    const uploadPromises = images.map(async (image, index) => {
+      const params = {
+        Bucket: bucket,
+        Key: `${keyPrefix}/${index}.jpeg`,
+        Body: image.data,
+        ContentDisposition: "inline",
+        ContentType: "image/jpeg",
+      };
+      await s3Client.send(new PutObjectCommand(params));
+
+      return `https://${params.Bucket}.s3.${REGION}.amazonaws.com/${params.Key}`;
+    });
+
+    const imageURLs = await Promise.all(uploadPromises);
+    console.log("All images uploaded successfully");
 
     // Generate the image URL based on the bucket and object key
-    const imageURL = `https://${params.Bucket}.s3.${REGION}.amazonaws.com/${params.Key}`;
 
-    return imageURL;
+    return imageURLs;
   } catch (err) {
     return err;
   }
