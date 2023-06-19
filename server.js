@@ -14,6 +14,7 @@ import handleGetAllItems from "./controllers/items.js";
 import handleMessage from "./controllers/messages.js";
 import handleNewItem from "./controllers/wardrobe.js";
 import handleImageUpload from "./controllers/users/image.js";
+import handleGetFilterOptions from "./controllers/filterOptions.js";
 
 const app = express();
 
@@ -35,6 +36,9 @@ app.use(cors());
 
 app.get("/", (req, res) => res.send("I can hear you!"));
 app.get("/items", (req, res) => handleGetAllItems(req, res, dataBase));
+app.get("/filterOptions", (req, res) =>
+  handleGetFilterOptions(req, res, dataBase)
+);
 app.get("/users/profile/:id", (req, res) =>
   handleProfileGet(req, res, dataBase)
 );
