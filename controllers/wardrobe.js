@@ -1,6 +1,6 @@
 import { uploadImageToAWS } from "./helpers.js";
 
-const handleNewItem = async function (req, res, dataBase) {
+export const handleNewItemUpload = async function (req, res, dataBase) {
   const { title, brand, category, size, price, description, userid } = req.body;
   const { images } = req.files;
 
@@ -8,7 +8,7 @@ const handleNewItem = async function (req, res, dataBase) {
   const item = {
     userid,
     title,
-    price,
+    price: +price,
     description,
     brand,
     category,
@@ -29,9 +29,38 @@ const handleNewItem = async function (req, res, dataBase) {
   const newImages = imageURL.map((url) => ({ itemid: newItem[0].itemid, url }));
   const response = await dataBase("images").insert(newImages);
 
-  res.json({
-    ...newItem[0],
-    images: imageURL,
-  });
+  const updatedWardrobe = await dataBase("items")
+    .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
+    .leftJoin("images", "items.itemid", "images.itemid")
+    .where("items.userid", userid)
+    .groupBy("items.itemid");
+
+  if (updatedWardrobe) {
+    res.json(updatedWardrobe);
+  } else {
+    res.status(404).json({ error: "User's wardrobe not found" });
+  }
 };
-export default handleNewItem;
+
+export const handleGetUserWardrobe = async function (req, res, dataBase) {
+  const { id } = req.params;
+
+  try {
+    // Retrieve the user's wardrobe with image URLs from the database
+    const wardrobe = await dataBase("items")
+      .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
+      .leftJoin("images", "items.itemid", "images.itemid")
+      .where("items.userid", id)
+      .groupBy("items.itemid");
+
+    // Check if the user's wardrobe exists
+    if (wardrobe) {
+      res.json(wardrobe);
+    } else {
+      res.status(404).json({ error: "User's wardrobe not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};

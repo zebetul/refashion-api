@@ -10,9 +10,12 @@ import {
   handleProfileUpdate,
   handleProfileGet,
 } from "./controllers/users/profile.js";
-import handleGetAllItems from "./controllers/items.js";
+import handleGetItems from "./controllers/items.js";
 import handleMessage from "./controllers/messages.js";
-import handleNewItem from "./controllers/wardrobe.js";
+import {
+  handleNewItemUpload,
+  handleGetUserWardrobe,
+} from "./controllers/wardrobe.js";
 import handleImageUpload from "./controllers/users/image.js";
 import handleGetFilterOptions from "./controllers/filterOptions.js";
 
@@ -35,12 +38,15 @@ app.use(fileupload());
 app.use(cors());
 
 app.get("/", (req, res) => res.send("I can hear you!"));
-app.get("/items", (req, res) => handleGetAllItems(req, res, dataBase));
+app.get("/items", (req, res) => handleGetItems(req, res, dataBase));
 app.get("/filterOptions", (req, res) =>
   handleGetFilterOptions(req, res, dataBase)
 );
 app.get("/users/profile/:id", (req, res) =>
   handleProfileGet(req, res, dataBase)
+);
+app.get("/wardrobe/:id", (req, res) =>
+  handleGetUserWardrobe(req, res, dataBase)
 );
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
@@ -50,7 +56,7 @@ app.post("/users/profile/:id", (req, res) =>
 );
 app.post("/users/image", (req, res) => handleImageUpload(req, res, dataBase));
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
-app.post("/wardrobe", (req, res) => handleNewItem(req, res, dataBase));
+app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
 
 app.listen(8000, () => {
   console.log("Server listening on port 8000");
