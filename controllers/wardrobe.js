@@ -44,14 +44,23 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
 
 export const handleGetUserWardrobe = async function (req, res, dataBase) {
   const { id } = req.params;
+  const { _sort: sort } = req.query;
+  const [column, order] = sort.split(":");
 
   try {
-    // Retrieve the user's wardrobe with image URLs from the database
-    const wardrobe = await dataBase("items")
+    let query = dataBase("items")
       .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
       .leftJoin("images", "items.itemid", "images.itemid")
       .where("items.userid", id)
       .groupBy("items.itemid");
+
+    // Apply sorting if provided
+    if (sort) {
+      const [column, order] = sort.split(":");
+      query = query.orderBy(column, order);
+    }
+
+    const wardrobe = await query;
 
     // Check if the user's wardrobe exists
     if (wardrobe) {
