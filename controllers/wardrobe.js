@@ -45,7 +45,6 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
 export const handleGetUserWardrobe = async function (req, res, dataBase) {
   const { id } = req.params;
   const { _sort: sort } = req.query;
-  const [column, order] = sort.split(":");
 
   try {
     let query = dataBase("items")

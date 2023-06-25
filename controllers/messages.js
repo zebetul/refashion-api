@@ -1,5 +1,3 @@
-import { response } from "express";
-
 const handleMessage = async function (req, res, dataBase) {
   const { senderID, receiverID, content, senderName, receiverName } = req.body;
 

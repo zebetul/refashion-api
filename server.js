@@ -18,6 +18,11 @@ import {
 } from "./controllers/wardrobe.js";
 import handleImageUpload from "./controllers/users/image.js";
 import handleGetFilterOptions from "./controllers/filterOptions.js";
+import {
+  handleAddToFavorites,
+  handleDeleteFavorites,
+  handleGetFavorites,
+} from "./controllers/favorites.js";
 
 const app = express();
 
@@ -48,6 +53,7 @@ app.get("/users/profile/:id", (req, res) =>
 app.get("/wardrobe/:id", (req, res) =>
   handleGetUserWardrobe(req, res, dataBase)
 );
+app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
@@ -57,6 +63,11 @@ app.post("/users/profile/:id", (req, res) =>
 app.post("/users/image", (req, res) => handleImageUpload(req, res, dataBase));
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
 app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
+app.post("/favorites", (req, res) => handleAddToFavorites(req, res, dataBase));
+
+app.delete("/favorites", (req, res) =>
+  handleDeleteFavorites(req, res, dataBase)
+);
 
 app.listen(8000, () => {
   console.log("Server listening on port 8000");
