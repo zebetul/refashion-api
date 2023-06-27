@@ -23,6 +23,7 @@ import {
   handleDeleteFavorites,
   handleGetFavorites,
 } from "./controllers/favorites.js";
+import handleToken from "./controllers/google.js";
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
+app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
