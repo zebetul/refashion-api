@@ -1,4 +1,4 @@
-import { getUserFromDB } from "./helpers.js";
+import { getUserFromDB, newSession } from "./helpers.js";
 
 const handleSignIn = async function (req, res, dataBase, bcrypt) {
   try {
@@ -8,22 +8,37 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     if (!email || !password)
       return res.status(404).json("Missing required fields");
 
+    // Try to get  the user's signin data from database
     const signInData = await dataBase
       .select("*")
       .from("login")
       .where("email", "=", email)
       .first();
+
+    // Check if the user exists
     if (!signInData) return res.json("email not registered");
 
     // Compare the provided password with the stored hash
     const passwordValid = await bcrypt.compare(password, signInData.hash);
-
     if (!passwordValid) return res.json("wrong password");
 
-    // Retrieve login data for the provided email
-    const response = await getUserFromDB(signInData.userid, dataBase);
+    // Get the user from database
+    const user = await getUserFromDB(signInData.userid, dataBase);
 
-    return res.json(response);
+    // Create a session for the user
+    const session = await newSession(signInData.userid, dataBase);
+    const { session_id, expires_at } = session;
+
+    // TODO: Set the session ID as an HTTP-only cookie
+    // (Is not working properly on localhost, the cookie is not set. Tested with Postman and works just fine.)
+    res.cookie("rfs_session_id", session_id, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false,
+      expires: expires_at,
+    });
+
+    return res.json(user);
   } catch (err) {
     console.log(err);
     res.status(400).json("error signing in");

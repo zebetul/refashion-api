@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import cors from "cors";
 import knex from "knex";
 import fileupload from "express-fileupload";
+import cookieParser from "cookie-parser";
 
 import handleRegister from "./controllers/register.js";
 import handleSignIn from "./controllers/signIn.js";
@@ -24,6 +25,7 @@ import {
   handleGetFavorites,
 } from "./controllers/favorites.js";
 import handleToken from "./controllers/google.js";
+import handleSession from "./controllers/handleSession.js";
 
 const app = express();
 
@@ -42,8 +44,11 @@ const dataBase = knex({
 app.use(express.json());
 app.use(fileupload());
 app.use(cors());
+app.use(cookieParser());
 
-app.get("/", (req, res) => res.send("I can hear you!"));
+app.get("/", (req, res) => {
+  res.send("Server running!");
+});
 app.get("/items", (req, res) => handleGetItems(req, res, dataBase));
 app.get("/filterOptions", (req, res) =>
   handleGetFilterOptions(req, res, dataBase)
@@ -55,6 +60,7 @@ app.get("/wardrobe/:id", (req, res) =>
   handleGetUserWardrobe(req, res, dataBase)
 );
 app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
+app.get("/sessions", (req, res) => handleSession(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));

@@ -89,3 +89,18 @@ export const validateGoogleToken = async function (token) {
   return ticket.getPayload();
   // const userid = payload.sub;
 };
+
+export const newSession = async function (userID, dataBase) {
+  // Generate sessionID
+  const sessionID = `${userID}_${Math.floor(Math.random() * 1000000000)}`;
+
+  // store sessionID in database
+  const session = await dataBase("sessions")
+    .insert({
+      session_id: sessionID,
+      user_id: userID,
+    })
+    .returning("*");
+
+  return session[0];
+};
