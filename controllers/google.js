@@ -44,7 +44,7 @@ const handleToken = async function (req, res, dataBase) {
     }
   }
 
-  // CASE 2. User allready registered with google
+  // CASE 2. User allready registered with google account
   if (data[0].hash === "google") {
     // Retrieve user data from the database
     const response = await getUserFromDB(data[0].userid, dataBase);

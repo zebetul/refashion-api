@@ -43,30 +43,74 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
   }
 };
 
+export const getConversations = async function (userid, dataBase) {
+  // ----------> RETREIVE MESSAGES AND ARRANGE THEM IN CONVERSATIONS <----------
+  // query for all messages sent or received by user
+  const messages = await dataBase("messages")
+    .select("*")
+    .where("sender_id", "=", userid)
+    .orWhere("receiver_id", "=", userid);
+
+  // Arrange messages in an array of conversation objects: [{interlocutorID, interlocutorName, interlocutorImg, messages: []}, last message]
+  const conversations = messages.reduce((acc, message) => {
+    let interlocutorID;
+    let interlocutorName;
+
+    if (message.sender_id === userid) {
+      interlocutorID = message.receiver_id;
+      interlocutorName = message.receiver_name;
+    } else {
+      interlocutorID = message.sender_id;
+      interlocutorName = message.sender_name;
+    }
+
+    // Check if the interlocutor is already in the array, if so, push the message to the messages array, if not, create a new object with the interlocutor and the messages array
+    const conversation = acc.find(
+      (conversation) => conversation.interlocutorID === interlocutorID
+    );
+    if (conversation) {
+      conversation.messages.push(message);
+    } else {
+      acc.push({ interlocutorID, interlocutorName, messages: [message] });
+    }
+    return acc;
+  }, []);
+
+  // add interlocutorImg to each conversation object
+  for (const conversation of conversations) {
+    const interlocutor = await dataBase("users")
+      .select("image")
+      .where("userid", "=", conversation.interlocutorID);
+    conversation.interlocutorImg = interlocutor[0].image;
+  }
+
+  // every conversations last message is the last message in the messages array, sort conversation array by last message timestamp
+  conversations.sort((a, b) => {
+    const lastMessageA = a.messages[a.messages.length - 1];
+    const lastMessageB = b.messages[b.messages.length - 1];
+    return lastMessageB.timestamp - lastMessageA.timestamp;
+  });
+
+  return conversations;
+};
+
 export const getUserFromDB = async function (userid, dataBase) {
   // Retrieve the user based on the login information
   const user = await dataBase("users").select("*").where("userid", "=", userid);
 
-  const messagesSent = await dataBase("messages")
-    .select("*")
-    .where("sender_id", "=", userid);
+  // Retreive conversations
+  const conversations = await getConversations(userid, dataBase);
 
-  const messagesReceived = await dataBase("messages")
-    .select("*")
-    .where("receiver_id", "=", userid);
-
-  // query for favorites, the result will be an array of itemid's
-
+  // Retreive favorites, the result will be an array of itemid's
   const favList = await dataBase("favorites")
     .select("itemid")
     .where("userid", "=", userid);
-
   const favorites = favList.map((item) => item.itemid);
 
+  // Create response object
   const response = {
     ...user[0],
-    messagesSent: messagesSent,
-    messagesReceived: messagesReceived,
+    conversations,
     favorites,
   };
 

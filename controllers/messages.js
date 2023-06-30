@@ -1,3 +1,5 @@
+import { getConversations } from "./helpers.js";
+
 const handleMessage = async function (req, res, dataBase) {
   const { senderID, receiverID, content, senderName, receiverName } = req.body;
 
@@ -6,7 +8,7 @@ const handleMessage = async function (req, res, dataBase) {
     return res.json("Missing required fields.");
 
   try {
-    const response = await dataBase("messages").returning("*").insert({
+    const data = await dataBase("messages").insert({
       sender_id: senderID,
       receiver_id: receiverID,
       sender_name: senderName,
@@ -14,8 +16,10 @@ const handleMessage = async function (req, res, dataBase) {
       content: content,
     });
 
-    return response[0].message_id
-      ? res.json(response)
+    const conversations = await getConversations(senderID, dataBase);
+
+    conversations
+      ? res.json(conversations)
       : res.status(404).json("🔥🔥🔥 Database not respoding.");
 
     // catching error and sending it if user registration fails

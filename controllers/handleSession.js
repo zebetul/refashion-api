@@ -4,8 +4,6 @@ const handleSession = async function (req, res, dataBase) {
   try {
     const { rfs_session_id } = req.cookies;
 
-    console.log(rfs_session_id);
-
     if (!rfs_session_id) return res.json("no session");
 
     const session = await dataBase
