@@ -29,13 +29,12 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
       };
       await s3Client.send(new PutObjectCommand(params));
 
+      // Generate the image URL based on the bucket and object key
       return `https://${params.Bucket}.s3.${REGION}.amazonaws.com/${params.Key}`;
     });
 
     const imageURLs = await Promise.all(uploadPromises);
     console.log("All images uploaded successfully");
-
-    // Generate the image URL based on the bucket and object key
 
     return imageURLs;
   } catch (err) {
@@ -43,20 +42,21 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
   }
 };
 
-export const getConversations = async function (userid, dataBase) {
+export const getConversations = async function (userID, dataBase) {
   // ----------> RETREIVE MESSAGES AND ARRANGE THEM IN CONVERSATIONS <----------
-  // query for all messages sent or received by user
+  // Query for all messages sent or received by user
   const messages = await dataBase("messages")
     .select("*")
-    .where("sender_id", "=", userid)
-    .orWhere("receiver_id", "=", userid);
+    .where("messages.sender_id", "=", userID)
+    .orWhere("messages.receiver_id", "=", userID)
+    .orderBy("messages.timestamp", "asc");
 
   // Arrange messages in an array of conversation objects: [{interlocutorID, interlocutorName, interlocutorImg, messages: []}, last message]
   const conversations = messages.reduce((acc, message) => {
     let interlocutorID;
     let interlocutorName;
 
-    if (message.sender_id === userid) {
+    if (message.sender_id === userID) {
       interlocutorID = message.receiver_id;
       interlocutorName = message.receiver_name;
     } else {
@@ -76,6 +76,39 @@ export const getConversations = async function (userid, dataBase) {
     return acc;
   }, []);
 
+  // select all exchange offers that have the user as sender or receiver
+  const exchanges = await dataBase("item_exchange")
+    .select("*")
+    .where("sender_id", "=", userID)
+    .orWhere("receiver_id", "=", userID);
+
+  // add exchangeOffer object, {sender_items, receiver_items, proposer_id} to each conversation
+  for (const conversation of conversations) {
+    const exchangeOffer = exchanges.find(
+      (exchange) =>
+        exchange.sender_id === conversation.interlocutorID ||
+        exchange.receiver_id === conversation.interlocutorID
+    );
+
+    if (exchangeOffer?.sender_id === userID) {
+      conversation.exchangeOffer = {
+        senderItems: exchangeOffer.sender_items,
+        receiverItems: exchangeOffer.receiver_items,
+        proposerID: exchangeOffer.proposer_id,
+        status: exchangeOffer.status,
+      };
+    }
+
+    if (exchangeOffer?.receiver_id === userID) {
+      conversation.exchangeOffer = {
+        receiverItems: exchangeOffer.sender_items,
+        senderItems: exchangeOffer.receiver_items,
+        proposerID: exchangeOffer.proposer_id,
+        status: exchangeOffer.status,
+      };
+    }
+  }
+
   // add interlocutorImg to each conversation object
   for (const conversation of conversations) {
     const interlocutor = await dataBase("users")
@@ -84,7 +117,7 @@ export const getConversations = async function (userid, dataBase) {
     conversation.interlocutorImg = interlocutor[0].image;
   }
 
-  // every conversations last message is the last message in the messages array, sort conversation array by last message timestamp
+  // Every conversations last message is the last message in the messages array. Sort conversation array by last message timestamp
   conversations.sort((a, b) => {
     const lastMessageA = a.messages[a.messages.length - 1];
     const lastMessageB = b.messages[b.messages.length - 1];
@@ -98,7 +131,7 @@ export const getUserFromDB = async function (userid, dataBase) {
   // Retrieve the user based on the login information
   const user = await dataBase("users").select("*").where("userid", "=", userid);
 
-  // Retreive conversations
+  // Retreive user's conversations
   const conversations = await getConversations(userid, dataBase);
 
   // Retreive favorites, the result will be an array of itemid's

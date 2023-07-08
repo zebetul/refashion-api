@@ -14,13 +14,13 @@ const handleImageUpload = async function (req, res, dataBase) {
     imageKey
   );
 
-  if (typeof imageURL !== "string")
+  if (typeof imageURL[0] !== "string")
     return res.status(400).json("🔥🔥🔥 Fail to upload image to AWS!");
 
   // Insert image URL in database in users table
   const user = await dataBase("users")
     .update({
-      image: imageURL,
+      image: imageURL[0],
     })
     .where("userid", "=", userID)
     .returning("*");
