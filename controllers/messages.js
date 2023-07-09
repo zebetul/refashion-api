@@ -1,20 +1,7 @@
 import { getConversations } from "./helpers.js";
 
 const handleMessage = async function (req, res, dataBase) {
-  const {
-    senderID,
-    receiverID,
-    content,
-    senderName,
-    receiverName,
-    exchangeOffer,
-  } = req.body;
-
-  const {
-    senderItems: sender_items,
-    receiverItems: receiver_items,
-    proposerID: proposer_id,
-  } = exchangeOffer;
+  const { senderID, receiverID, content, senderName, receiverName } = req.body;
 
   // INPUT VALIDATION
   if (!senderID || !receiverID || !content || !senderName || !receiverName)
@@ -30,16 +17,6 @@ const handleMessage = async function (req, res, dataBase) {
         content: content,
       })
       .returning("*");
-
-    if (sender_items.length || receiver_items.length) {
-      const exchange = await dataBase("item_exchange").insert({
-        sender_id: senderID,
-        receiver_id: receiverID,
-        sender_items,
-        receiver_items,
-        proposer_id,
-      });
-    }
 
     const conversations = await getConversations(senderID, dataBase);
 

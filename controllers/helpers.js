@@ -34,7 +34,6 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
     });
 
     const imageURLs = await Promise.all(uploadPromises);
-    console.log("All images uploaded successfully");
 
     return imageURLs;
   } catch (err) {

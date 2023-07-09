@@ -1,8 +1,10 @@
+import { getUserFromDB } from "../helpers.js";
+
 export const handleProfileUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
 
   try {
-    const user = await dataBase("users")
+    const data = await dataBase("users")
       .update({
         aboutme: req.body.aboutMe,
         languages: req.body.languages,
@@ -13,25 +15,9 @@ export const handleProfileUpdate = async function (req, res, dataBase) {
       .where("userid", "=", id)
       .returning("*");
 
-    const messagesSent = await dataBase("messages")
-      .select("*")
-      .where("sender_id", "=", id);
+    const user = await getUserFromDB(data[0].userid, dataBase);
 
-    const messagesReceived = await dataBase("messages")
-      .select("*")
-      .where("receiver_id", "=", id);
-
-    const response = {
-      ...user[0],
-      messagesSent: messagesSent,
-      messagesReceived: messagesReceived,
-    };
-
-    return user.length
-      ? // Succes
-        res.json(response)
-      : // User not found
-        res.json("Update not successful, user not found");
+    return res.json(user);
   } catch (err) {
     console.error(err);
     // Server error

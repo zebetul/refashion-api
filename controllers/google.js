@@ -21,21 +21,28 @@ const handleToken = async function (req, res, dataBase) {
 
   // CASE 1. User doesn't exist, create new user and return it
   if (data.length === 0) {
-    const newUser = {
-      name: name,
-      email: email,
-      joined: new Date(),
-      image: picture,
-    };
-
     const trx = await dataBase.transaction();
 
     try {
       // Creating and returning the new user from the database
-      await trx("login").insert({ email: email, hash: "google" });
-      const user = await trx("users").returning("*").insert(newUser);
+      const newUser = await trx("login").returning("*").insert({
+        email: email,
+        hash: "google",
+      });
+
+      const data = await trx("users").returning("*").insert({
+        userid: newUser[0].userid,
+        name: name,
+        email: email,
+        joined: new Date(),
+        image: picture,
+      });
       await trx.commit();
-      return res.json(user[0]);
+
+      // Retreiving the new user from the database
+      const response = await getUserFromDB(data[0].userid, dataBase);
+
+      return res.json(response);
 
       // Error handling
     } catch (err) {

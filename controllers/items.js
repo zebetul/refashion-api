@@ -49,7 +49,8 @@ const handleGetItems = async function (req, res, dataBase) {
     // Sorting the items based on the column and order provided by the client
     if (sort) {
       const [column, order] = sort.split(":");
-      query = query.orderBy(column, order);
+      // if there are two or more items with same value in sort criteria, sort them by their id
+      query = query.orderBy(column, order).orderBy("items.itemid", "asc");
     }
 
     // Count the total number of items after applying filters and search query and calculate the total number of pages based on the limit and total number of items

@@ -1,3 +1,5 @@
+import { getUserFromDB } from "./helpers.js";
+
 const handleRegister = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;
 
@@ -20,29 +22,33 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
   // Hashing provided password
   const hash = bcrypt.hashSync(password, 10);
 
-  dataBase.transaction(async (trx) => {
-    try {
-      // Inserting new user's password and email in login table and returning email
-      const loginEmail = await trx("login").returning("email").insert({
-        hash: hash,
-        email: email,
-      });
+  // New Transaction for inserting new user in database
+  const trx = await dataBase.transaction();
+  try {
+    // Inserting new user's password and email in login table
+    const newUser = await trx("login").returning("*").insert({
+      hash: hash,
+      email: email,
+    });
 
-      // Inserting new user in users table and returning user
-      const user = await trx("users").returning("*").insert({
-        name: userName,
-        email: loginEmail[0].email,
-        joined: new Date(),
-      });
+    // Inserting new user in users table and returning user
+    const data = await trx("users").returning("*").insert({
+      userid: newUser[0].userid,
+      name: userName,
+      email: email,
+      joined: new Date(),
+    });
 
-      // responding with the newly registered user
-      return res.json(user[0]);
+    await trx.commit();
 
-      // catching error and sending it if user registration fails
-    } catch (err) {
-      console.error(err);
-      return res.json("Unable to register");
-    }
-  });
+    // Retreiving the new user from the database
+    const response = await getUserFromDB(data[0].userid, dataBase);
+
+    return res.json(response);
+  } catch (err) {
+    await trx.rollback();
+    console.log(err);
+    return res.status(400).json("Unable to register");
+  }
 };
 export default handleRegister;
