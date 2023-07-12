@@ -12,7 +12,7 @@ import {
   handleProfileGet,
 } from "./controllers/users/profile.js";
 import handleGetItems from "./controllers/items.js";
-import handleMessage from "./controllers/messages.js";
+import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
 import {
   handleNewItemUpload,
   handleGetUserWardrobe,
@@ -71,6 +71,9 @@ app.post("/users/profile/:id", (req, res) =>
 );
 app.post("/users/image", (req, res) => handleImageUpload(req, res, dataBase));
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
+app.post("/messages/mark_as_read", (req, res) =>
+  markMessagesAsRead(req, res, dataBase)
+);
 app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
 app.post("/favorites", (req, res) => handleAddToFavorites(req, res, dataBase));
 app.post("/exchange", (req, res) => handleExchange(req, res, dataBase));

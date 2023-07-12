@@ -95,6 +95,7 @@ export const getConversations = async function (userID, dataBase) {
         receiverItems: exchangeOffer.receiver_items,
         proposerID: exchangeOffer.proposer_id,
         status: exchangeOffer.status,
+        exchangeTimestamp: exchangeOffer.exchange_timestamp,
       };
     }
 
@@ -104,6 +105,7 @@ export const getConversations = async function (userID, dataBase) {
         senderItems: exchangeOffer.receiver_items,
         proposerID: exchangeOffer.proposer_id,
         status: exchangeOffer.status,
+        exchangeTimestamp: exchangeOffer.exchange_timestamp,
       };
     }
   }
@@ -133,6 +135,18 @@ export const getUserFromDB = async function (userid, dataBase) {
   // Retreive user's conversations
   const conversations = await getConversations(userid, dataBase);
 
+  // check how much unread messages the user has
+  const unreadMessages = conversations.reduce((acc, conversation) => {
+    const unreadMessages = conversation.messages.filter(
+      (message) =>
+        message.receiver_id === userid &&
+        message.read === false &&
+        message.sender_id !== userid
+    );
+
+    return acc + unreadMessages.length;
+  }, 0);
+
   // Retreive favorites, the result will be an array of itemid's
   const favList = await dataBase("favorites")
     .select("itemid")
@@ -144,6 +158,7 @@ export const getUserFromDB = async function (userid, dataBase) {
     ...user[0],
     conversations,
     favorites,
+    unreadMessages,
   };
 
   return response;
