@@ -22,6 +22,13 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     const passwordValid = await bcrypt.compare(password, signInData.hash);
     if (!passwordValid) return res.json("wrong password");
 
+    // update the user's last login time
+    await dataBase("users")
+      .update({
+        last_loggedin: new Date(),
+      })
+      .where("userid", "=", signInData.userid);
+
     // Get the user from database
     const user = await getUserFromDB(signInData.userid, dataBase);
 

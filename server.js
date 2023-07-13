@@ -27,6 +27,7 @@ import {
 import handleToken from "./controllers/google.js";
 import handleSession from "./controllers/handleSession.js";
 import handleExchange from "./controllers/itemExchange.js";
+import handlePostOrder from "./controllers/orders.js";
 
 const app = express();
 
@@ -77,6 +78,7 @@ app.post("/messages/mark_as_read", (req, res) =>
 app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
 app.post("/favorites", (req, res) => handleAddToFavorites(req, res, dataBase));
 app.post("/exchange", (req, res) => handleExchange(req, res, dataBase));
+app.post("/orders", (req, res) => handlePostOrder(req, res, dataBase));
 
 app.delete("/favorites", (req, res) =>
   handleDeleteFavorites(req, res, dataBase)

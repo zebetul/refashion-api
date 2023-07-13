@@ -53,6 +53,13 @@ const handleToken = async function (req, res, dataBase) {
 
   // CASE 2. User allready registered with google account
   if (data[0].hash === "google") {
+    // update the user's last login time
+    await dataBase("users")
+      .update({
+        last_loggedin: new Date(),
+      })
+      .where("userid", "=", data[0].userid);
+
     // Retrieve user data from the database
     const response = await getUserFromDB(data[0].userid, dataBase);
     return res.json(response);
