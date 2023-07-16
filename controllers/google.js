@@ -14,7 +14,8 @@ const handleToken = async function (req, res, dataBase) {
     return res.status(400).json("Token verification failed");
   }
 
-  const { email, name, picture } = payload;
+  const { email, email_verified, name, given_name, family_name, picture } =
+    payload;
 
   // Checking if user exists in database
   const data = await dataBase("login").select("*").where("email", "=", email);
@@ -32,8 +33,11 @@ const handleToken = async function (req, res, dataBase) {
 
       const data = await trx("users").returning("*").insert({
         userid: newUser[0].userid,
-        name: name,
-        email: email,
+        name,
+        first_name: given_name,
+        last_name: family_name,
+        email,
+        email_verified,
         joined: new Date(),
         image: picture,
       });
