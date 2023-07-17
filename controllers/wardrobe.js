@@ -1,4 +1,4 @@
-import { uploadImageToAWS } from "./helpers.js";
+import { uploadImageToAWS, processImages } from "./helpers.js";
 
 export const handleNewItemUpload = async function (req, res, dataBase) {
   const { title, brand, category, size, price, description, userid } = req.body;
@@ -19,8 +19,14 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
   // Create unique imageKey = 'userid-itemid-imageName'
   const imageKey = `${userid}/item-${newItem[0].itemid}`;
 
+  const processedImages = await processImages(images);
+
   // Upload image to AWS S3 rfsimages bucket and get the URL
-  const imageURL = await uploadImageToAWS(images, "rfsimages", imageKey);
+  const imageURL = await uploadImageToAWS(
+    processedImages,
+    "rfsimages",
+    imageKey
+  );
 
   if (!imageURL.length)
     return res.status(400).json("Fail to upload image to AWS!");

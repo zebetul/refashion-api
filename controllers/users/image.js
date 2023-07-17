@@ -1,15 +1,20 @@
-import { uploadImageToAWS } from "../helpers.js";
+import { processImages, uploadImageToAWS } from "../helpers.js";
 
-const handleImageUpload = async function (req, res, dataBase) {
+const handleProfileImageUpload = async function (req, res, dataBase) {
   const { imageFile } = req.files;
   const { userID } = req.body;
 
   // Create unique imageKey = userID
   const imageKey = `userprofile-${userID}`;
 
+  console.log("imageFile: ", imageFile);
+
+  // Process image with sharp library. Resize to 600x800 pixels and convert to jpeg with 80% quality.
+  const processedImage = await processImages([imageFile]);
+
   // Upload image to AWS S3 rfsimages bucket and get the URL
   const imageURL = await uploadImageToAWS(
-    [imageFile],
+    processedImage,
     "rfs-user-images",
     imageKey
   );
@@ -28,4 +33,4 @@ const handleImageUpload = async function (req, res, dataBase) {
   // Returning image URL
   res.json(user[0].image);
 };
-export default handleImageUpload;
+export default handleProfileImageUpload;

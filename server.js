@@ -17,7 +17,7 @@ import {
   handleNewItemUpload,
   handleGetUserWardrobe,
 } from "./controllers/wardrobe.js";
-import handleImageUpload from "./controllers/users/image.js";
+import handleProfileImageUpload from "./controllers/users/image.js";
 import handleGetFilterOptions from "./controllers/filterOptions.js";
 import {
   handleAddToFavorites,
@@ -70,7 +70,9 @@ app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
-app.post("/users/image", (req, res) => handleImageUpload(req, res, dataBase));
+app.post("/users/image", (req, res) =>
+  handleProfileImageUpload(req, res, dataBase)
+);
 app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
 app.post("/messages/mark_as_read", (req, res) =>
   markMessagesAsRead(req, res, dataBase)

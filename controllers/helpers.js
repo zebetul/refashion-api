@@ -1,3 +1,4 @@
+import sharp from "sharp";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-provider-ini";
 import { OAuth2Client } from "google-auth-library";
@@ -18,12 +19,17 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
     credentials: fromIni(),
   });
 
+  // If images is not an array, make it an array
+  if (!Array.isArray(images)) {
+    images = [images];
+  }
+
   try {
     const uploadPromises = images.map(async (image, index) => {
       const params = {
         Bucket: bucket,
         Key: `${keyPrefix}/${index}.jpeg`,
-        Body: image.data,
+        Body: image,
         ContentDisposition: "inline",
         ContentType: "image/jpeg",
       };
@@ -37,6 +43,7 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
 
     return imageURLs;
   } catch (err) {
+    console.log(err);
     return err;
   }
 };
@@ -194,4 +201,27 @@ export const newSession = async function (userID, dataBase) {
     .returning("*");
 
   return session[0];
+};
+
+/**
+ * Process images with sharp library. Resize to 600x800 pixels and convert to jpeg with 80% quality.
+ * @param {Array} images array of image objects: {data: imageBuffer, name: imageName}
+ * @returns {Array} array of image buffers
+ */
+
+export const processImages = async function (images) {
+  // Process each image in the 'images' array with sharp library
+  const processedImages = [];
+
+  for (const image of images) {
+    // Resize image to 600x800 pixels
+    const resizedImage = await sharp(image.data)
+      .resize(600, 800)
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    processedImages.push(resizedImage);
+  }
+
+  return processedImages;
 };
