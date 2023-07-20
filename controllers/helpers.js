@@ -135,6 +135,44 @@ export const getConversations = async function (userID, dataBase) {
   return conversations;
 };
 
+export const getOrders = async function (userid, dataBase) {
+  // Retreive user's orders from database and craete orders array which will include every order that has user involved as buyer or seller, as an object with order's details, with the item as it's property(containing item's details and image) and with the other user as it's property(containing user's details and image)
+  const orders = await dataBase("orders")
+    .select("*")
+    .where("buyer_id", "=", userid)
+    .orWhere("seller_id", "=", userid);
+
+  for (const order of orders) {
+    // Retreive item's details
+    const item = await dataBase("items")
+      .select("*")
+      .where("itemid", "=", order.item_id);
+
+    order.item = item[0];
+
+    // Retreive item's image
+    const image = await dataBase("images")
+      .select("url")
+      .where("itemid", "=", order.item_id)
+      .first();
+
+    order.item.image = image.url;
+
+    // Retreive other user's name and
+    const otherUser = await dataBase("users")
+      .select("name", "image")
+      .where(
+        "userid",
+        "=",
+        order.buyer_id === userid ? order.seller_id : order.buyer_id
+      );
+
+    order.otherUser = otherUser[0];
+  }
+
+  return orders;
+};
+
 export const getUserFromDB = async function (userid, dataBase) {
   // Retrieve the user based on the login information
   const user = await dataBase("users").select("*").where("userid", "=", userid);
@@ -160,12 +198,24 @@ export const getUserFromDB = async function (userid, dataBase) {
     .where("userid", "=", userid);
   const favorites = favList.map((item) => item.itemid);
 
+  const orders = await getOrders(userid, dataBase);
+
+  const unProcessedOrdersNumber = orders.reduce(
+    (acc, order) =>
+      order.seller_id === userid && order.status === "Comanda plasata."
+        ? acc + 1
+        : acc,
+    0
+  );
+
   // Create response object
   const response = {
     ...user[0],
     conversations,
     favorites,
     unreadMessages,
+    orders,
+    unProcessedOrdersNumber,
   };
 
   return response;
@@ -208,7 +258,6 @@ export const newSession = async function (userID, dataBase) {
  * @param {Array} images array of image objects: {data: imageBuffer, name: imageName}
  * @returns {Array} array of image buffers
  */
-
 export const processImages = async function (images) {
   // Process each image in the 'images' array with sharp library
   const processedImages = [];
