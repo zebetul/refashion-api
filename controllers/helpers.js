@@ -136,11 +136,12 @@ export const getConversations = async function (userID, dataBase) {
 };
 
 export const getOrders = async function (userid, dataBase) {
-  // Retreive user's orders from database and craete orders array which will include every order that has user involved as buyer or seller, as an object with order's details, with the item as it's property(containing item's details and image) and with the other user as it's property(containing user's details and image)
+  // Retreive user's orders from database and create orders array which will include every order that has user involved as buyer or seller, as an object with order's details, with the item as it's property(containing item's details and image) and with the other user as it's property(containing user's details and image)
   const orders = await dataBase("orders")
     .select("*")
     .where("buyer_id", "=", userid)
-    .orWhere("seller_id", "=", userid);
+    .orWhere("seller_id", "=", userid)
+    .orderBy("timestamp", "desc");
 
   for (const order of orders) {
     // Retreive item's details
@@ -158,7 +159,7 @@ export const getOrders = async function (userid, dataBase) {
 
     order.item.image = image.url;
 
-    // Retreive other user's name and
+    // Retreive other user's name and image
     const otherUser = await dataBase("users")
       .select("name", "image")
       .where(
@@ -202,7 +203,9 @@ export const getUserFromDB = async function (userid, dataBase) {
 
   const unProcessedOrdersNumber = orders.reduce(
     (acc, order) =>
-      order.seller_id === userid && order.status === "Comanda plasata."
+      order.seller_id === userid &&
+      (order.status === "Comanda plasata." ||
+        order.status === "In curs de procesare.")
         ? acc + 1
         : acc,
     0
