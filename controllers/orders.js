@@ -44,9 +44,16 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
       .returning("*");
 
     if (req.body.deliveryMethod)
-      await dataBase("orders")
-        .where({ order_id: orderId })
-        .update({ delivery_method: req.body.deliveryMethod });
+      await dataBase("orders").where({ order_id: orderId }).update({
+        delivery_method: req.body.deliveryMethod,
+        // update AWB if any
+        awb: req.body.awb,
+      });
+
+    if (req.body.cancelReason)
+      await dataBase("orders").where({ order_id: orderId }).update({
+        cancel_reason: req.body.cancelReason,
+      });
 
     const orders = await getOrders(userID, dataBase);
 
