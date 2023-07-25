@@ -7,13 +7,22 @@ export const handlePostOrder = async (req, res, dataBase) => {
 
   const { newOrder, newMessage } = req.body;
 
-  // error handling
+  // Error handling
   try {
+    // Insert new order
     const order = await dataBase("orders").insert(newOrder).returning("*");
 
+    // Insert new message
     const message = await dataBase("messages")
       .insert(newMessage)
       .returning("*");
+
+    // Flag item is_requested to true to all items in the order
+    order[0].items_id.forEach(async (item_id) => {
+      await dataBase("items")
+        .where({ itemid: item_id })
+        .update({ status: "is_requested" });
+    });
 
     const orders = await getOrders(order[0].buyer_id, dataBase);
 
@@ -36,24 +45,48 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
 
   const { orderId, status, userID } = req.body;
 
-  // error handling
   try {
     await dataBase("orders")
       .where({ order_id: orderId })
       .update({ status, last_status_update: new Date() })
       .returning("*");
 
-    if (req.body.deliveryMethod)
+    if (req.body.deliveryMethod) {
       await dataBase("orders").where({ order_id: orderId }).update({
         delivery_method: req.body.deliveryMethod,
-        // update AWB if any
         awb: req.body.awb,
       });
+    }
 
-    if (req.body.cancelReason)
+    if (req.body.cancelReason) {
       await dataBase("orders").where({ order_id: orderId }).update({
         cancel_reason: req.body.cancelReason,
       });
+
+      // Flag all item from itemsID array to status available
+      const itemsID = await dataBase("orders")
+        .select("items_id")
+        .where({ order_id: orderId });
+
+      itemsID[0].items_id.forEach(async (item_id) => {
+        await dataBase("items")
+          .where({ itemid: item_id })
+          .update({ status: "" });
+      });
+    }
+
+    if (status === "Finalizata.") {
+      // Flag all item from itemsID array to status 'sold'
+      const itemsID = await dataBase("orders")
+        .select("items_id")
+        .where({ order_id: orderId });
+
+      itemsID[0].items_id.forEach(async (item_id) => {
+        await dataBase("items")
+          .where({ itemid: item_id })
+          .update({ status: "sold" });
+      });
+    }
 
     const orders = await getOrders(userID, dataBase);
 
@@ -64,15 +97,19 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
   }
 };
 
-export const handleDeleteOrders = async (req, res, dataBase) => {
+export const handleDeleteOrder = async (req, res, dataBase) => {
   // Input validation
   if (!req.body.orderId) return res.status(400).json("Missing required fields");
 
-  const { orderId, userID } = req.body;
+  const { orderId, userID, itemsID } = req.body;
 
-  // error handling
   try {
     await dataBase("orders").where({ order_id: orderId }).del();
+
+    // Flag all item from itemsID array to status available
+    itemsID.forEach(async (item_id) => {
+      await dataBase("items").where({ itemid: item_id }).update({ status: "" });
+    });
 
     const orders = await getOrders(userID, dataBase);
 

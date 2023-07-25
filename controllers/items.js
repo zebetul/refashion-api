@@ -1,4 +1,4 @@
-const handleGetItems = async function (req, res, dataBase) {
+export const handleGetItems = async function (req, res, dataBase) {
   try {
     const { _page, _limit, _q: searchQuery, _filters, _sort: sort } = req.query;
 
@@ -71,4 +71,3 @@ const handleGetItems = async function (req, res, dataBase) {
     res.json("🔥🔥🔥 Error retrieving items from the database");
   }
 };
-export default handleGetItems;

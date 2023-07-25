@@ -144,20 +144,21 @@ export const getOrders = async function (userid, dataBase) {
     .orderBy("timestamp", "desc");
 
   for (const order of orders) {
-    // Retreive item's details
-    const item = await dataBase("items")
+    // Retreive every item's details involved in the order and add it as array to the order object
+    const items = await dataBase("items")
       .select("*")
-      .where("itemid", "=", order.item_id);
+      .whereIn("itemid", order.items_id);
 
-    order.item = item[0];
+    order.items = items;
 
-    // Retreive item's image
-    const image = await dataBase("images")
-      .select("url")
-      .where("itemid", "=", order.item_id)
-      .first();
+    // Retreive item's image for every item involved in the order and add it to the item object
+    for (const item of order.items) {
+      const image = await dataBase("images")
+        .select("url")
+        .where("itemid", "=", item.itemid);
 
-    order.item.image = image.url;
+      item.image = image[0].url;
+    }
 
     // Retreive other user's name and image
     const otherUser = await dataBase("users")
@@ -201,11 +202,19 @@ export const getUserFromDB = async function (userid, dataBase) {
 
   const orders = await getOrders(userid, dataBase);
 
-  const unProcessedOrdersNumber = orders.reduce(
+  const receivedPendingOrdersNr = orders.reduce(
     (acc, order) =>
       order.seller_id === userid &&
       (order.status === "Comanda plasata." ||
         order.status === "In curs de procesare.")
+        ? acc + 1
+        : acc,
+    0
+  );
+
+  const sentPendingOrdersNr = orders.reduce(
+    (acc, order) =>
+      order.buyer_id === userid && order.status === "Expediata."
         ? acc + 1
         : acc,
     0
@@ -218,7 +227,8 @@ export const getUserFromDB = async function (userid, dataBase) {
     favorites,
     unreadMessages,
     orders,
-    unProcessedOrdersNumber,
+    sentPendingOrdersNr,
+    receivedPendingOrdersNr,
   };
 
   return response;

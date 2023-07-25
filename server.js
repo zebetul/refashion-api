@@ -11,7 +11,7 @@ import {
   handleProfileUpdate,
   handleProfileGet,
 } from "./controllers/users/profile.js";
-import handleGetItems from "./controllers/items.js";
+import { handleGetItems } from "./controllers/items.js";
 import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
 import {
   handleNewItemUpload,
@@ -29,7 +29,7 @@ import handleSession from "./controllers/handleSession.js";
 import handleExchange from "./controllers/itemExchange.js";
 import {
   handleUpdateStatus,
-  handleDeleteOrders,
+  handleDeleteOrder,
   handlePostOrder,
 } from "./controllers/orders.js";
 
@@ -92,7 +92,7 @@ app.post("/orders/update_status", (req, res) =>
 app.delete("/favorites", (req, res) =>
   handleDeleteFavorites(req, res, dataBase)
 );
-app.delete("/orders", (req, res) => handleDeleteOrders(req, res, dataBase));
+app.delete("/orders", (req, res) => handleDeleteOrder(req, res, dataBase));
 
 app.listen(8000, () => {
   console.log("Server listening on port 8000");
