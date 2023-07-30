@@ -71,3 +71,32 @@ export const handleGetItems = async function (req, res, dataBase) {
     res.json("🔥🔥🔥 Error retrieving items from the database");
   }
 };
+
+export const handleGetItemById = async function (req, res, dataBase) {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.json("Missing request params.");
+    }
+
+    // Retrieving the item and its images and userid, username and user image as properties from the database
+    const item = await dataBase("items")
+      .select(
+        "items.*",
+        dataBase.raw("ARRAY_AGG(images.url) AS images"),
+        "users.userid as sellerID",
+        "users.name as sellerName",
+        "users.image as sellerImage"
+      )
+      .leftJoin("images", "items.itemid", "images.itemid")
+      .leftJoin("users", "items.userid", "users.userid")
+      .groupBy("items.itemid", "users.userid")
+      .where("items.itemid", id);
+
+    item ? res.json(item[0]) : res.json("Item not found.");
+  } catch (err) {
+    console.error(err);
+    res.json("🔥🔥🔥 Error retrieving item from the database");
+  }
+};

@@ -11,7 +11,7 @@ import {
   handleProfileUpdate,
   handleProfileGet,
 } from "./controllers/users/profile.js";
-import { handleGetItems } from "./controllers/items.js";
+import { handleGetItems, handleGetItemById } from "./controllers/items.js";
 import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
 import {
   handleNewItemUpload,
@@ -56,6 +56,7 @@ app.get("/", (req, res) => {
   res.send("Server running!");
 });
 app.get("/items", (req, res) => handleGetItems(req, res, dataBase));
+app.get("/item/:id", (req, res) => handleGetItemById(req, res, dataBase));
 app.get("/filterOptions", (req, res) =>
   handleGetFilterOptions(req, res, dataBase)
 );
