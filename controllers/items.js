@@ -1,3 +1,5 @@
+import { deleteItemImagesFromAWS } from "./helpers.js";
+
 export const handleGetItems = async function (req, res, dataBase) {
   try {
     const { _page, _limit, _q: searchQuery, _filters, _sort: sort } = req.query;
@@ -98,5 +100,29 @@ export const handleGetItemById = async function (req, res, dataBase) {
   } catch (err) {
     console.error(err);
     res.json("🔥🔥🔥 Error retrieving item from the database");
+  }
+};
+
+export const handleDeleteItem = async function (req, res, dataBase) {
+  const { itemID, userID, imagesNr } = req.body;
+
+  try {
+    // Delete item from the items table
+    const deletedItem = await dataBase("items")
+      .where("itemid", itemID)
+      .del()
+      .returning("*");
+
+    // Delete images from AWS S3 bucket
+    await deleteItemImagesFromAWS(userID, itemID, imagesNr);
+
+    if (deletedItem) {
+      res.json(deletedItem);
+    } else {
+      res.status(404).json({ error: "Item not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 };

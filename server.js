@@ -11,7 +11,11 @@ import {
   handleProfileUpdate,
   handleProfileGet,
 } from "./controllers/users/profile.js";
-import { handleGetItems, handleGetItemById } from "./controllers/items.js";
+import {
+  handleGetItems,
+  handleGetItemById,
+  handleDeleteItem,
+} from "./controllers/items.js";
 import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
 import {
   handleNewItemUpload,
@@ -90,6 +94,7 @@ app.post("/orders/update_status", (req, res) =>
   handleUpdateStatus(req, res, dataBase)
 );
 
+app.delete("/items", (req, res) => handleDeleteItem(req, res, dataBase));
 app.delete("/favorites", (req, res) =>
   handleDeleteFavorites(req, res, dataBase)
 );

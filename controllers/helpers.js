@@ -1,7 +1,18 @@
 import sharp from "sharp";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectsCommand,
+} from "@aws-sdk/client-s3";
 import { fromIni } from "@aws-sdk/credential-provider-ini";
 import { OAuth2Client } from "google-auth-library";
+
+// AWS S3 configuration
+const REGION = "eu-north-1";
+const s3Client = new S3Client({
+  region: REGION,
+  credentials: fromIni(),
+});
 
 /**
  * Create an Amazon S3 service client object with credentials configuration. Then upload file to specified bucket. For now, the configuration is set to the default configuration file on local machine. On deploy set configuration to environmental variables.
@@ -13,12 +24,6 @@ import { OAuth2Client } from "google-auth-library";
  * @author Cristi Sebeni
  */
 export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
-  const REGION = "eu-north-1";
-  const s3Client = new S3Client({
-    region: REGION,
-    credentials: fromIni(),
-  });
-
   // If images is not an array, make it an array
   if (!Array.isArray(images)) {
     images = [images];
@@ -33,6 +38,7 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
         ContentDisposition: "inline",
         ContentType: "image/jpeg",
       };
+
       await s3Client.send(new PutObjectCommand(params));
 
       // Generate the image URL based on the bucket and object key
@@ -42,6 +48,39 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
     const imageURLs = await Promise.all(uploadPromises);
 
     return imageURLs;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+};
+
+/**
+ * Delete all images of an item from AWS S3 bucket. All users have separate folders with userID as folder name. All items have separate folders, with itemID as folder name, within the user's folder, which contain images. For now, the configuration is set to the default configuration file on local machine. On deploy set configuration to environmental variables.
+ * @param {Number} userID data about the image(userID)
+ * @param {Number} itemID data about the image(itemID)
+ * @param {Number} imagesNr number of images to be deleted
+ * @returns {String} success message or error message if the deletion fails
+ * @author Cristi Sebeni
+ */
+export const deleteItemImagesFromAWS = async function (
+  userID,
+  itemID,
+  imagesNr
+) {
+  const Objects = [];
+  for (let i = 0; i < imagesNr; i++) {
+    Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
+  }
+
+  const params = {
+    Bucket: "rfsimages",
+    Delete: { Objects },
+  };
+
+  try {
+    const response = await s3Client.send(new DeleteObjectsCommand(params));
+
+    return response;
   } catch (err) {
     console.log(err);
     return err;
