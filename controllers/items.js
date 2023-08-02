@@ -23,6 +23,9 @@ export const handleGetItems = async function (req, res, dataBase) {
 
     // Apply filters. The whereIn method is used to specify that the items.category column should match any of the values in the array
     if (filters) {
+      if (filters.sections.length > 0) {
+        query = query.whereIn("items.section", filters.sections);
+      }
       if (filters.categories.length > 0) {
         query = query.whereIn("items.category", filters.categories);
       }
@@ -31,6 +34,15 @@ export const handleGetItems = async function (req, res, dataBase) {
       }
       if (filters.sizes && filters.sizes.length > 0) {
         query = query.whereIn("items.size", filters.sizes);
+      }
+      if (filters.conditions && filters.conditions.length > 0) {
+        query = query.whereIn("items.condition", filters.conditions);
+      }
+      // Check if one of the colours from filters.colours is in the colours array of the item
+      if (filters.colours && filters.colours.length > 0) {
+        query = query.whereRaw(
+          `items.colours && '{"${filters.colours.join('","')}"}'`
+        );
       }
 
       // Extract the maximum price from the items table after applying filters but before applying price filter and convert it to a number before sending it to the client

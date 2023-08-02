@@ -2,6 +2,7 @@ const handleGetFilterOptions = async function (req, res, dataBase) {
   try {
     // creating filterOptions object
     const filterOptions = {
+      sections: [],
       categories: [],
       brands: [],
       sizes: [],
@@ -9,6 +10,10 @@ const handleGetFilterOptions = async function (req, res, dataBase) {
     };
 
     // Extracting the filterOptions from the database
+    // Retrieve distinct sections
+    const sections = await dataBase("items").distinct("section");
+    filterOptions.sections = sections.map((row) => row.section);
+
     // Retrieve distinct categories
     const categories = await dataBase("items").distinct("category");
     filterOptions.categories = categories.map((row) => row.category);
@@ -20,6 +25,14 @@ const handleGetFilterOptions = async function (req, res, dataBase) {
     // Retrieve distinct sizes
     const sizes = await dataBase("items").distinct("size");
     filterOptions.sizes = sizes.map((row) => row.size);
+
+    // Retrieve distinct conditions
+    const conditions = await dataBase("items").distinct("condition");
+    filterOptions.conditions = conditions.map((row) => row.condition);
+
+    // Retrieve distinct colours. Colours column's value is an array of colours and we need to flatten it and remove duplicates
+    const colours = await dataBase("items").distinct("colours");
+    filterOptions.colours = [...new Set(colours.flatMap((row) => row.colours))];
 
     // Retrieve maximum price
     const maxPrice = await dataBase("items").max("price").first();

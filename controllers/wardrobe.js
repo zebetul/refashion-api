@@ -1,7 +1,25 @@
 import { uploadImageToAWS, processImages } from "./helpers.js";
 
 export const handleNewItemUpload = async function (req, res, dataBase) {
-  const { title, brand, category, size, price, description, userid } = req.body;
+  const {
+    title,
+    brand,
+    section,
+    category,
+    size,
+    condition,
+    price,
+    description,
+    userid,
+  } = req.body;
+
+  let colours = req.body.colours;
+
+  // If colours is not an array, convert it to an array
+  if (!Array.isArray(colours)) {
+    colours = [colours];
+  }
+
   const { images } = req.files;
 
   // Insert new item into items table in the database
@@ -12,7 +30,10 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
     description,
     brand,
     category,
+    section,
     size,
+    colours,
+    condition,
   };
   const newItem = await dataBase("items").insert(item).returning("*");
 
