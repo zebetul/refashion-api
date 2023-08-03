@@ -1,11 +1,11 @@
-import { getOrders, getConversations } from "./helpers.js";
+import { getOrders, getConversations, getUserFromDB } from "./helpers.js";
 
 export const handlePostOrder = async (req, res, dataBase) => {
   // Input validation
   if (!req.body.newOrder)
     return res.status(400).json("Missing required fields");
 
-  const { newOrder, newMessage } = req.body;
+  const { newOrder, newMessage, isSaveDataChecked } = req.body;
 
   // Error handling
   try {
@@ -24,14 +24,36 @@ export const handlePostOrder = async (req, res, dataBase) => {
         .update({ status: "is_requested" });
     });
 
-    const orders = await getOrders(order[0].buyer_id, dataBase);
+    // Update user's delivery address if requested
+    if (isSaveDataChecked) {
+      const {
+        buyer_id: userid,
+        buyer_first_name: first_name,
+        buyer_last_name: last_name,
+        buyer_phone: phone,
+        buyer_county: county,
+        buyer_city: city,
+        buyer_street: street,
+        buyer_address: address_details,
+        buyer_zip_code: zip_code,
+      } = newOrder;
 
-    const conversations = await getConversations(
-      message[0].sender_id,
-      dataBase
-    );
+      await dataBase("users").where({ userid }).update({
+        first_name,
+        last_name,
+        phone,
+        county,
+        city,
+        street,
+        address_details,
+        zip_code,
+      });
+    }
 
-    res.json({ orders, conversations });
+    // Get user from database
+    const updatedUser = await getUserFromDB(order[0].buyer_id, dataBase);
+
+    res.json(updatedUser);
   } catch (err) {
     console.log(err);
     res.status(400).json("error posting order");

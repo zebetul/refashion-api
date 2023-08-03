@@ -2,15 +2,16 @@ import { getUserFromDB } from "../helpers.js";
 
 export const handleProfileUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
+  const { aboutMe, languages, preferredBrand, city, county } = req.body;
 
   try {
     const data = await dataBase("users")
       .update({
-        aboutme: req.body.aboutMe,
-        languages: req.body.languages,
-        preferredbrand: req.body.preferredBrand,
-        city: req.body.city,
-        birthdate: req.body.birthDate,
+        aboutme: aboutMe,
+        languages: languages,
+        preferredbrand: preferredBrand,
+        city: city,
+        county: county,
       })
       .where("userid", "=", id)
       .returning("*");
