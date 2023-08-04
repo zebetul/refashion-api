@@ -10,6 +10,7 @@ import handleSignIn from "./controllers/signIn.js";
 import {
   handleProfileUpdate,
   handleProfileGet,
+  handleDeleteProfile,
 } from "./controllers/users/profile.js";
 import {
   handleGetItems,
@@ -99,6 +100,9 @@ app.delete("/favorites", (req, res) =>
   handleDeleteFavorites(req, res, dataBase)
 );
 app.delete("/orders", (req, res) => handleDeleteOrder(req, res, dataBase));
+app.delete("/users/profile/:id", (req, res) =>
+  handleDeleteProfile(req, res, dataBase)
+);
 
 app.listen(8000, () => {
   console.log("Server listening on port 8000");

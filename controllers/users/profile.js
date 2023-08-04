@@ -40,3 +40,34 @@ export const handleProfileGet = async function (req, res, dataBase) {
     res.status(500).json("🔥🔥🔥Database error: not connecting");
   }
 };
+
+export const handleDeleteProfile = async function (req, res, dataBase) {
+  const { id } = req.params;
+
+  try {
+    const user = await dataBase("login")
+      .where("userid", "=", id)
+      .del()
+      .returning("*");
+
+    if (!user.length) return res.json("Database error: user not found");
+
+    // In orders table empty all the user related columns like address, phone, email, but keep the order row
+    await dataBase("orders").where("buyer_id", "=", id).update({
+      buyer_first_name: null,
+      buyer_last_name: null,
+      buyer_address: null,
+      buyer_phone: null,
+      buyer_email: null,
+      buyer_county: null,
+      buyer_city: null,
+      buyer_street: null,
+      buyer_zip_code: null,
+    });
+
+    res.json("User deleted.");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("🔥🔥🔥Database error: not connecting");
+  }
+};

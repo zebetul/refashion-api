@@ -161,7 +161,7 @@ export const getConversations = async function (userID, dataBase) {
     const interlocutor = await dataBase("users")
       .select("image")
       .where("userid", "=", conversation.interlocutorID);
-    conversation.interlocutorImg = interlocutor[0].image;
+    conversation.interlocutorImg = interlocutor[0]?.image;
   }
 
   // Every conversations last message is the last message in the messages array. Sort conversation array by last message timestamp
@@ -287,7 +287,6 @@ export const validateGoogleToken = async function (token) {
   });
 
   return ticket.getPayload();
-  // const userid = payload.sub;
 };
 
 export const newSession = async function (userID, dataBase) {
