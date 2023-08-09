@@ -9,6 +9,12 @@ export const handleGetItems = async function (req, res, dataBase) {
     const filters = JSON.parse(_filters);
     let newMaxPrice = 0;
 
+    // Querry for the biggest price in the items table
+    const topPrice = await dataBase("items")
+      .select("price")
+      .orderBy("price", "desc")
+      .limit(1);
+
     // Joining the items and images tables together and extracting them
     let query = dataBase("items")
       .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
@@ -78,7 +84,12 @@ export const handleGetItems = async function (req, res, dataBase) {
     const items = await query;
 
     items
-      ? res.json({ items, totalPages, newMaxPrice })
+      ? res.json({
+          items,
+          totalPages,
+          newMaxPrice,
+          topPrice: +topPrice[0].price,
+        })
       : res.json("Items not found.");
   } catch (err) {
     console.error(err);
