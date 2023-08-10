@@ -21,6 +21,7 @@ import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
 import {
   handleNewItemUpload,
   handleGetUserWardrobe,
+  handleItemUpdate,
 } from "./controllers/wardrobe.js";
 import handleProfileImageUpload from "./controllers/users/image.js";
 import handleGetFilterOptions from "./controllers/filterOptions.js";
@@ -88,6 +89,9 @@ app.post("/messages/mark_as_read", (req, res) =>
   markMessagesAsRead(req, res, dataBase)
 );
 app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
+app.post("/wardrobe/update_item/:id", (req, res) =>
+  handleItemUpdate(req, res, dataBase)
+);
 app.post("/favorites", (req, res) => handleAddToFavorites(req, res, dataBase));
 app.post("/exchange", (req, res) => handleExchange(req, res, dataBase));
 app.post("/orders", (req, res) => handlePostOrder(req, res, dataBase));

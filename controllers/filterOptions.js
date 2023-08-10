@@ -1,15 +1,16 @@
 const handleGetFilterOptions = async function (req, res, dataBase) {
   try {
-    // creating filterOptions object
     const filterOptions = {
       sections: [],
       categories: [],
       brands: [],
       sizes: [],
+      conditions: [],
+      colours: [],
       price: 0,
     };
 
-    // Extracting the filterOptions from the database
+    // EXTRACTING FILTER OPTIONS FROM DATABASE
     // Retrieve distinct sections
     const sections = await dataBase("items").distinct("section");
     filterOptions.sections = sections.map((row) => row.section);

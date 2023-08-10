@@ -92,10 +92,56 @@ export const handleGetUserWardrobe = async function (req, res, dataBase) {
     if (wardrobe) {
       res.json(wardrobe);
     } else {
-      res.status(404).json({ error: "User's wardrobe not found" });
+      res.status(404).json("User's wardrobe not found");
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json("Server error");
+  }
+};
+
+export const handleItemUpdate = async function (req, res, dataBase) {
+  const { id } = req.params;
+
+  const {
+    section,
+    category,
+    brand,
+    size,
+    colours,
+    condition,
+    price,
+    title,
+    description,
+  } = req.body;
+
+  try {
+    const updatedItem = await dataBase("items")
+      .where("itemid", id)
+      .update({
+        section,
+        category,
+        brand,
+        size,
+        colours,
+        condition,
+        price,
+        title,
+        description,
+      })
+      .returning("*");
+
+    // Add item imges to the updatedItem object
+    const images = await dataBase("images").where("itemid", id);
+    updatedItem[0].images = images.map((image) => image.url);
+
+    if (updatedItem.length) {
+      res.json(updatedItem[0]);
+    } else {
+      res.status(404).json("Item not found");
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json("Server error");
   }
 };
