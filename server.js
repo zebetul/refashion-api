@@ -43,14 +43,27 @@ import handleContactUs from "./controllers/contactUs.js";
 const app = express();
 
 // connecting to database
+// LOCAL DATABASE
+// const dataBase = knex({
+//   client: "pg",
+//   connection: {
+//     host: "127.0.0.1",
+//     port: 5432,
+//     user: "postgres",
+//     password: "zebetul",
+//     database: "refashion",
+//   },
+// });
+
 const dataBase = knex({
   client: "pg",
   connection: {
-    host: "127.0.0.1",
+    host: "dpg-cjd9f82vvtos73a8i4f0-a",
+    // host: "dpg-cjd9f82vvtos73a8i4f0-a.frankfurt-postgres.render.com",
     port: 5432,
-    user: "postgres",
-    password: "zebetul",
-    database: "refashion",
+    user: "restil_api",
+    password: "reuVLfSukEahjcOevGWQ4a910mGLyLvU",
+    database: "restil",
   },
 });
 
