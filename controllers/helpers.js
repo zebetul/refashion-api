@@ -11,7 +11,12 @@ import { OAuth2Client } from "google-auth-library";
 const REGION = "eu-north-1";
 const s3Client = new S3Client({
   region: REGION,
-  credentials: fromIni(),
+  // credentials: fromIni(),
+  // credentials after deployement on Render
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
 });
 
 /**
