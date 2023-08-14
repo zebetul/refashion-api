@@ -38,6 +38,7 @@ import {
   handleDeleteOrder,
   handlePostOrder,
 } from "./controllers/orders.js";
+import handleContactUs from "./controllers/contactUs.js";
 
 const app = express();
 
@@ -98,6 +99,7 @@ app.post("/orders", (req, res) => handlePostOrder(req, res, dataBase));
 app.post("/orders/update_status", (req, res) =>
   handleUpdateStatus(req, res, dataBase)
 );
+app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
 
 app.delete("/items", (req, res) => handleDeleteItem(req, res, dataBase));
 app.delete("/favorites", (req, res) =>
