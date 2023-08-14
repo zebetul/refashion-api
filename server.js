@@ -54,6 +54,8 @@ const dataBase = knex({
   },
 });
 
+const PORT = process.env.PORT || 8000;
+
 app.use(express.json());
 app.use(fileupload());
 app.use(cors());
@@ -110,6 +112,6 @@ app.delete("/users/profile/:id", (req, res) =>
   handleDeleteProfile(req, res, dataBase)
 );
 
-app.listen(8000, () => {
-  console.log("Server listening on port 8000");
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
