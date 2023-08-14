@@ -37,7 +37,7 @@ const handleGetFilterOptions = async function (req, res, dataBase) {
 
     // Retrieve maximum price
     const maxPrice = await dataBase("items").max("price").first();
-    filterOptions.price = maxPrice.max;
+    filterOptions.price = maxPrice.max || 0;
 
     res.json(filterOptions);
   } catch (err) {
