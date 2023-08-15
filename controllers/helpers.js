@@ -4,15 +4,12 @@ import {
   PutObjectCommand,
   DeleteObjectsCommand,
 } from "@aws-sdk/client-s3";
-import { fromIni } from "@aws-sdk/credential-provider-ini";
 import { OAuth2Client } from "google-auth-library";
 
 // AWS S3 configuration
 const REGION = "eu-north-1";
 const s3Client = new S3Client({
   region: REGION,
-  // credentials: fromIni(),
-  // credentials after deployement on Render
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
