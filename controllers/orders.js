@@ -97,8 +97,8 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
       });
     }
 
-    if (status === "Finalizata.") {
-      // Flag all item from itemsID array to status 'sold'
+    // If status is Finalizată flag all item from itemsID array to status 'sold'
+    if (status === "Finalizată.") {
       const itemsID = await dataBase("orders")
         .select("items_id")
         .where({ order_id: orderId });
