@@ -246,8 +246,8 @@ export const getUserFromDB = async function (userid, dataBase) {
   const receivedPendingOrdersNr = orders.reduce(
     (acc, order) =>
       order.seller_id === userid &&
-      (order.status === "Comanda plasata." ||
-        order.status === "In curs de procesare.")
+      (order.status === "Comandă plasată." ||
+        order.status === "În curs de procesare.")
         ? acc + 1
         : acc,
     0
@@ -255,7 +255,7 @@ export const getUserFromDB = async function (userid, dataBase) {
 
   const sentPendingOrdersNr = orders.reduce(
     (acc, order) =>
-      order.buyer_id === userid && order.status === "Expediata."
+      order.buyer_id === userid && order.status === "Expediată."
         ? acc + 1
         : acc,
     0
