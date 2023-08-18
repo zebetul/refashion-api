@@ -1,16 +1,23 @@
 import { deleteItemImagesFromAWS } from "./helpers.js";
 
 export const handleGetItems = async function (req, res, dataBase) {
+  const response = {
+    items: [],
+    totalPages: 0,
+    newMaxPrice: 0,
+    topPrice: 0,
+    categories: [],
+  };
+
   try {
     const { _page, _limit, _q: searchQuery, _filters, _sort: sort } = req.query;
 
     const limit = parseInt(_limit);
     const offset = (_page - 1) * limit;
     const filters = JSON.parse(_filters);
-    let newMaxPrice = 0;
 
     // Querry for the biggest price in the items table
-    const topPrice = await dataBase("items")
+    response.topPrice = await dataBase("items")
       .select("price")
       .orderBy("price", "desc")
       .limit(1);
@@ -27,10 +34,18 @@ export const handleGetItems = async function (req, res, dataBase) {
       query = query.where("items.title", "ilike", `%${searchQuery}%`);
     }
 
-    // Apply filters. The whereIn method is used to specify that the items.category column should match any of the values in the array
+    // Apply filters.
     if (filters) {
+      // Apply section filter if provided
       if (filters.sections.length > 0) {
+        // The whereIn method is used to specify that the items.section column should match any of the values in the array
         query = query.whereIn("items.section", filters.sections);
+
+        // After the section filter is applied retrieve the categories available for the selected sections
+        const clonedQuery = await query.clone();
+        response.categories = await clonedQuery
+          .select("items.category")
+          .groupBy("items.category");
       }
       if (filters.categories.length > 0) {
         query = query.whereIn("items.category", filters.categories);
@@ -53,7 +68,7 @@ export const handleGetItems = async function (req, res, dataBase) {
 
       // Extract the maximum price from the items table after applying filters but before applying price filter and convert it to a number before sending it to the client
       const clonedQuery = await query.clone();
-      newMaxPrice = +clonedQuery.reduce((acc, item) => {
+      response.newMaxPrice = +clonedQuery.reduce((acc, item) => {
         if (+item.price > acc) {
           acc = item.price;
         }
@@ -75,22 +90,15 @@ export const handleGetItems = async function (req, res, dataBase) {
 
     // Count the total number of items after applying filters and search query and calculate the total number of pages based on the limit and total number of items
     const totalItems = await query.clone();
-    const totalPages = Math.ceil(totalItems.length / limit);
+    response.totalPages = Math.ceil(totalItems.length / limit);
 
     // Apply pagination
     query = query.offset(offset).limit(limit);
 
     // Execute the query
-    const items = await query;
+    response.items = await query;
 
-    items
-      ? res.json({
-          items,
-          totalPages,
-          newMaxPrice,
-          topPrice: +topPrice[0].price,
-        })
-      : res.json("Items not found.");
+    response.items ? res.json(response) : res.json("Items not found.");
   } catch (err) {
     console.error(err);
     res.json("🔥🔥🔥 Error retrieving items from the database");
