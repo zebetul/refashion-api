@@ -42,10 +42,7 @@ export const handleGetItems = async function (req, res, dataBase) {
         query = query.whereIn("items.section", filters.sections);
 
         // After the section filter is applied retrieve the categories available for the selected sections
-        const clonedQuery = await query.clone();
-        response.categories = await clonedQuery
-          .select("items.category")
-          .groupBy("items.category");
+        response.categories = await query.clone().distinct("items.category");
       }
       if (filters.categories.length > 0) {
         query = query.whereIn("items.category", filters.categories);
