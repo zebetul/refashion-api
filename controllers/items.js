@@ -16,10 +16,12 @@ export const handleGetItems = async function (req, res, dataBase) {
     const filters = JSON.parse(_filters);
 
     // Querry for the biggest price in the items table
-    response.topPrice = await dataBase("items")
+    const priceObject = await dataBase("items")
       .select("price")
       .orderBy("price", "desc")
       .limit(1);
+
+    response.topPrice = +priceObject[0].price;
 
     // Joining the items and images tables together and extracting them
     let query = dataBase("items")
