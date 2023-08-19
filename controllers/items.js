@@ -6,7 +6,6 @@ export const handleGetItems = async function (req, res, dataBase) {
     totalPages: 0,
     newMaxPrice: 0,
     topPrice: 0,
-    categories: [],
   };
 
   try {
@@ -23,14 +22,6 @@ export const handleGetItems = async function (req, res, dataBase) {
       .limit(1);
 
     // Joining the items and images tables together and extracting them
-    // let query = dataBase("items")
-    //   .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
-    //   .leftJoin(
-    //     "images",
-    //     "items.itemid",
-    //     "images.itemid"
-    //   )
-    //   .groupBy("items.itemid");
     let query = dataBase("items")
       .select(
         "items.*",
@@ -52,12 +43,6 @@ export const handleGetItems = async function (req, res, dataBase) {
       if (filters.sections.length > 0) {
         // The whereIn method is used to specify that the items.section column should match any of the values in the array
         query = query.whereIn("items.section", filters.sections);
-
-        // After the section filter is applied retrieve the categories available for the selected sections
-        response.categories = await query
-          .clone()
-          .distinct("category")
-          .pluck("category");
       }
       if (filters.categories.length > 0) {
         query = query.whereIn("items.category", filters.categories);
