@@ -35,7 +35,7 @@ export const handleGetItems = async function (req, res, dataBase) {
       .select(
         "items.*",
         dataBase.raw(
-          "(SELECT ARRAY_AGG(images.url ORDER BY images.id) FROM images WHERE items.itemid = images.itemid) AS images"
+          "(SELECT ARRAY_AGG(images.url ORDER BY images.imageid) FROM images WHERE items.itemid = images.itemid) AS images"
         )
       )
       .groupBy("items.itemid");
