@@ -23,12 +23,20 @@ export const handleGetItems = async function (req, res, dataBase) {
       .limit(1);
 
     // Joining the items and images tables together and extracting them
+    // let query = dataBase("items")
+    //   .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
+    //   .leftJoin(
+    //     "images",
+    //     "items.itemid",
+    //     "images.itemid"
+    //   )
+    //   .groupBy("items.itemid");
     let query = dataBase("items")
-      .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
-      .leftJoin(
-        "images ORDER BY images.imageid",
-        "items.itemid",
-        "images.itemid"
+      .select(
+        "items.*",
+        dataBase.raw(
+          "(SELECT ARRAY_AGG(images.url ORDER BY images.id) FROM images WHERE items.itemid = images.itemid) AS images"
+        )
       )
       .groupBy("items.itemid");
 
