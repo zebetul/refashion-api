@@ -25,7 +25,11 @@ export const handleGetItems = async function (req, res, dataBase) {
     // Joining the items and images tables together and extracting them
     let query = dataBase("items")
       .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
-      .leftJoin("images", "items.itemid", "images.itemid")
+      .leftJoin(
+        "images ORDER BY images.imageid",
+        "items.itemid",
+        "images.itemid"
+      )
       .groupBy("items.itemid");
 
     // Apply search query if provided
