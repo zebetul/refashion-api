@@ -17,7 +17,7 @@ const s3Client = new S3Client({
 });
 
 /**
- * Create an Amazon S3 service client object with credentials configuration. Then upload file to specified bucket. For now, the configuration is set to the default configuration file on local machine. On deploy set configuration to environmental variables.
+ * Create an Amazon S3 service client object with credentials configuration. Then upload file to specified bucket.
  * @param {Object} image file object
  * @param {String} bucket AWS S3 bucket
  * @param {String} key unique key for image needed for AWS upload
@@ -312,6 +312,11 @@ export const newSession = async function (userID, dataBase) {
  * @returns {Array} array of image buffers
  */
 export const processImages = async function (images) {
+  // If images is not an array, make it an array
+  if (!Array.isArray(images)) {
+    images = [images];
+  }
+
   // Process each image in the 'images' array with sharp library
   const processedImages = [];
 

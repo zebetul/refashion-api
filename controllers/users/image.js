@@ -10,7 +10,7 @@ const handleProfileImageUpload = async function (req, res, dataBase) {
   console.log("imageFile: ", imageFile);
 
   // Process image with sharp library. Resize to 600x800 pixels and convert to jpeg with 80% quality.
-  const processedImage = await processImages([imageFile]);
+  const processedImage = await processImages(imageFile);
 
   // Upload image to AWS S3 rfsimages bucket and get the URL
   const imageURL = await uploadImageToAWS(

@@ -46,10 +46,10 @@ const app = express();
 const dataBase = knex({
   client: "pg",
   connection: {
-    host: process.env.PSQL_HOST,
-    port: process.env.PSQL_PORT,
     user: process.env.PSQL_USER,
     password: process.env.PSQL_PASSWORD,
+    host: process.env.PSQL_HOST,
+    port: process.env.PSQL_PORT,
     database: "restil",
   },
 });

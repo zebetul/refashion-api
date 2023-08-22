@@ -65,6 +65,8 @@ export const handleDeleteProfile = async function (req, res, dataBase) {
       buyer_zip_code: null,
     });
 
+    // Delete all user related images from AWS S3(profile image, item images)
+
     res.json("User deleted.");
   } catch (err) {
     console.error(err);
