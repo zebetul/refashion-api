@@ -323,6 +323,7 @@ export const processImages = async function (images) {
   for (const image of images) {
     // Resize image to 600x800 pixels
     const resizedImage = await sharp(image.data)
+      .rotate()
       .resize(600, 800)
       .jpeg({ quality: 80 })
       .toBuffer();
