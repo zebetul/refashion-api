@@ -35,10 +35,10 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
     colours,
     condition,
   };
-  const newItem = await dataBase("items").insert(item).returning("*");
+  const insertedItem = await dataBase("items").insert(item).returning("*");
 
   // Create unique imageKey = 'userid-itemid-imageName'
-  const imageKey = `${userid}/item-${newItem[0].itemid}`;
+  const imageKey = `${userid}/item-${insertedItem[0].itemid}`;
 
   const processedImages = await processImages(images);
 
@@ -53,19 +53,25 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
     return res.status(400).json("Fail to upload image to AWS!");
 
   // Insert image URL into images table
-  const newImages = imageURL.map((url) => ({ itemid: newItem[0].itemid, url }));
-  const response = await dataBase("images").insert(newImages);
+  const newImages = imageURL.map((url) => ({
+    itemid: insertedItem[0].itemid,
+    url,
+  }));
+  await dataBase("images").insert(newImages);
 
-  const updatedWardrobe = await dataBase("items")
-    .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
-    .leftJoin("images", "items.itemid", "images.itemid")
-    .where("items.userid", userid)
-    .groupBy("items.itemid");
+  const newItem = await dataBase("items")
+    .select(
+      "items.*",
+      dataBase.raw(
+        "(SELECT ARRAY_AGG(images.url ORDER BY images.imageid) FROM images WHERE items.itemid = images.itemid) AS images"
+      )
+    )
+    .where("items.itemid", insertedItem[0].itemid);
 
-  if (updatedWardrobe) {
-    res.json(updatedWardrobe);
+  if (newItem.length) {
+    res.json(newItem[0]);
   } else {
-    res.status(404).json({ error: "User's wardrobe not found" });
+    res.status(404).json({ error: "New item not found in the database." });
   }
 };
 
