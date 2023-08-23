@@ -60,11 +60,11 @@ export const handleDeleteProfile = async function (req, res, dataBase) {
       }
     });
 
-    await deleteImagesFromAWS(Objects);
+    await deleteImagesFromAWS(Objects, "rfsimages");
 
     // 2. Delete profile image that looks like this on the AWS: userprofile-2/0.jpeg
     const profileImage = [{ Key: `userprofile-${id}/0.jpeg` }];
-    await deleteImagesFromAWS(profileImage);
+    await deleteImagesFromAWS(profileImage, "rfs-user-images");
 
     // Delete user from the users table
     const user = await dataBase("login")

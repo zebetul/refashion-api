@@ -151,7 +151,7 @@ export const handleDeleteItem = async function (req, res, dataBase) {
       Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
     }
 
-    await deleteImagesFromAWS(Objects);
+    await deleteImagesFromAWS(Objects, "rfsimages");
 
     if (deletedItem) {
       res.json(deletedItem);

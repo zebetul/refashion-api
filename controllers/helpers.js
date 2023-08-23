@@ -64,9 +64,9 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
  * @returns {String} success message or error message if the deletion fails
  * @author Cristi Sebeni
  */
-export const deleteImagesFromAWS = async function (Objects) {
+export const deleteImagesFromAWS = async function (Objects, bucket) {
   const input = {
-    Bucket: "rfsimages",
+    Bucket: bucket,
     Delete: { Objects },
   };
 
