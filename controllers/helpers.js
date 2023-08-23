@@ -64,23 +64,14 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
  * @returns {String} success message or error message if the deletion fails
  * @author Cristi Sebeni
  */
-export const deleteItemImagesFromAWS = async function (
-  userID,
-  itemID,
-  imagesNr
-) {
-  const Objects = [];
-  for (let i = 0; i < imagesNr; i++) {
-    Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
-  }
-
-  const params = {
+export const deleteItemImagesFromAWS = async function (Objects) {
+  const input = {
     Bucket: "rfsimages",
     Delete: { Objects },
   };
 
   try {
-    const response = await s3Client.send(new DeleteObjectsCommand(params));
+    const response = await s3Client.send(new DeleteObjectsCommand(input));
 
     return response;
   } catch (err) {

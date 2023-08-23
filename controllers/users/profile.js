@@ -45,6 +45,28 @@ export const handleDeleteProfile = async function (req, res, dataBase) {
   const { id } = req.params;
 
   try {
+    // Delete all user related images from AWS S3(profile image, item images)
+    // 1. Delete items images
+    // 1.1 Get the itemid of all the items of the user
+    const items = await dataBase("items")
+      .select("itemid")
+      .where("userid", "=", id);
+
+    // 1.2 Delete all the images of the items
+    const Objects = [];
+    items.forEach((item) => {
+      for (let i = 0; i < 5; i++) {
+        Objects.push({ Key: `${id}/item-${item.itemid}/${i}.jpeg` });
+      }
+    });
+
+    await deleteItemImagesFromAWS(Objects);
+
+    // 2. Delete profile image that looks like this on the AWS: userprofile-2/0.jpeg
+    const profileImage = [{ Key: `userprofile-${id}/0.jpeg` }];
+    await deleteItemImagesFromAWS(profileImage);
+
+    // Delete user from the users table
     const user = await dataBase("login")
       .where("userid", "=", id)
       .del()
@@ -64,8 +86,6 @@ export const handleDeleteProfile = async function (req, res, dataBase) {
       buyer_street: null,
       buyer_zip_code: null,
     });
-
-    // Delete all user related images from AWS S3(profile image, item images)
 
     res.json("User deleted.");
   } catch (err) {

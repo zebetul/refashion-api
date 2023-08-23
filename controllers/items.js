@@ -146,7 +146,12 @@ export const handleDeleteItem = async function (req, res, dataBase) {
       .returning("*");
 
     // Delete images from AWS S3 bucket
-    await deleteItemImagesFromAWS(userID, itemID, imagesNr);
+    const Objects = [];
+    for (let i = 0; i < imagesNr; i++) {
+      Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
+    }
+
+    await deleteItemImagesFromAWS(Objects);
 
     if (deletedItem) {
       res.json(deletedItem);
