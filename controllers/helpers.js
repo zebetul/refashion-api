@@ -57,10 +57,9 @@ export const uploadImageToAWS = async function (images, bucket, keyPrefix) {
 };
 
 /**
- * Delete all images of an item from AWS S3 bucket. All users have separate folders with userID as folder name. All items have separate folders, with itemID as folder name, within the user's folder, which contain images. For now, the configuration is set to the default configuration file on local machine. On deploy set configuration to environmental variables.
- * @param {Number} userID data about the image(userID)
- * @param {Number} itemID data about the image(itemID)
- * @param {Number} imagesNr number of images to be deleted
+ * Delete all provided Objects from AWS S3 bucket. All users have separate folders with userID as folder name. All items have separate folders, with itemID as folder name, within the user's folder, which contain images.
+ * @param {Array} Objects array of objects to be deleted from AWS S3 bucket
+ * @param {String} bucket AWS S3 bucket
  * @returns {String} success message or error message if the deletion fails
  * @author Cristi Sebeni
  */
