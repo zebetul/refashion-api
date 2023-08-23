@@ -1,4 +1,4 @@
-import { deleteItemImagesFromAWS } from "./helpers.js";
+import { deleteImagesFromAWS } from "./helpers.js";
 
 export const handleGetItems = async function (req, res, dataBase) {
   const response = {
@@ -151,7 +151,7 @@ export const handleDeleteItem = async function (req, res, dataBase) {
       Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
     }
 
-    await deleteItemImagesFromAWS(Objects);
+    await deleteImagesFromAWS(Objects);
 
     if (deletedItem) {
       res.json(deletedItem);

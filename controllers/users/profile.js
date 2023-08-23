@@ -1,4 +1,4 @@
-import { getUserFromDB } from "../helpers.js";
+import { getUserFromDB, deleteImagesFromAWS } from "../helpers.js";
 
 export const handleProfileUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
@@ -60,11 +60,11 @@ export const handleDeleteProfile = async function (req, res, dataBase) {
       }
     });
 
-    await deleteItemImagesFromAWS(Objects);
+    await deleteImagesFromAWS(Objects);
 
     // 2. Delete profile image that looks like this on the AWS: userprofile-2/0.jpeg
     const profileImage = [{ Key: `userprofile-${id}/0.jpeg` }];
-    await deleteItemImagesFromAWS(profileImage);
+    await deleteImagesFromAWS(profileImage);
 
     // Delete user from the users table
     const user = await dataBase("login")
