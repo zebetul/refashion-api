@@ -41,7 +41,7 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     // Set the session cookie
     res.cookie("rfs_session_id", session_id, {
       httpOnly: true,
-      sameSite: "Lax",
+      sameSite: "None",
       secure: true,
       expires: expires_at,
       path: "/", // cookie will be sent to all routes
