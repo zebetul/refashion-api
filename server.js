@@ -55,23 +55,22 @@ const dataBase = knex({
 
 const PORT = process.env.PORT || 8000;
 
+const allowedOrigins = ["http://localhost:3000", "https://restil.onrender.com"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Allow credentials to be sent
+};
+
 app.use(express.json());
 app.use(fileupload());
 app.use(cookieParser());
-
-const allowedOrigins = ["http://localhost:3000", "https://restil.onrender.com"];
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // Allow credentials to be sent
-  })
-);
+app.use(cors(corsOptions));
 
 app.get("/", (req, res) => {
   res.send("Server running!");
