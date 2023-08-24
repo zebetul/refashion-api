@@ -15,11 +15,13 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
       .where("email", "=", email)
       .first();
 
-    // Check if the user exists
+    // Check if the user exists. If doesn't, return error
     if (!signInData) return res.json("email not registered");
 
     // Compare the provided password with the stored hash
     const passwordValid = await bcrypt.compare(password, signInData.hash);
+
+    // If the password is wrong, return error
     if (!passwordValid) return res.json("wrong password");
 
     // update the user's last login time
@@ -42,6 +44,7 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
       sameSite: "strict",
       secure: true,
       expires: expires_at,
+      path: "/", // cookie will be sent to all routes
     });
 
     return res.json(user);
