@@ -7,8 +7,6 @@ const handleProfileImageUpload = async function (req, res, dataBase) {
   // Create unique imageKey = userID
   const imageKey = `userprofile-${userID}`;
 
-  console.log("imageFile: ", imageFile);
-
   // Process image with sharp library. Resize to 600x800 pixels and convert to jpeg with 80% quality.
   const processedImage = await processImages(imageFile);
 
