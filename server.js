@@ -38,6 +38,7 @@ import {
   handlePostOrder,
 } from "./controllers/orders.js";
 import handleContactUs from "./controllers/contactUs.js";
+import handleSignOut from "./controllers/signOut.js";
 
 const app = express();
 
@@ -88,6 +89,7 @@ app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
 app.get("/sessions", (req, res) => handleSession(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
+app.post("/signout", (req, res) => handleSignOut(req, res, dataBase));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/users/profile/:id", (req, res) =>
