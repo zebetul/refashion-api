@@ -206,6 +206,13 @@ export const getOrders = async function (userid, dataBase) {
   return orders;
 };
 
+/**
+ * Retreive user's details from database and create response object with user's details, conversations, favorites, unread messages, orders and pending orders numbers
+ * @param {Number} userid user's id
+ * @param {Object} dataBase database object
+ * @returns {Object} response object with user's details, conversations, favorites, unread messages, orders and pending orders numbers
+ * @author Cristi Sebeni
+ **/
 export const getUserFromDB = async function (userid, dataBase) {
   // Retrieve the user based on the login information
   const user = await dataBase("users").select("*").where("userid", "=", userid);

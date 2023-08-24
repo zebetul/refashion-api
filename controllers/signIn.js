@@ -36,12 +36,11 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     const session = await newSession(signInData.userid, dataBase);
     const { session_id, expires_at } = session;
 
-    // TODO: Set the session ID as an HTTP-only cookie
-    // (Is not working properly on localhost, the cookie is not set. Tested with Postman and works just fine.)
+    // Set the session cookie
     res.cookie("rfs_session_id", session_id, {
       httpOnly: true,
       sameSite: "strict",
-      secure: false,
+      secure: true,
       expires: expires_at,
     });
 
