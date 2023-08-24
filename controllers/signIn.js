@@ -36,6 +36,7 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
 
     // Create a session for the user
     const session = await newSession(signInData.userid, dataBase);
+
     const { session_id, expires_at } = session;
 
     // Set the session cookie
@@ -44,7 +45,7 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
       sameSite: "None",
       secure: true,
       expires: expires_at,
-      path: "/", // cookie will be sent to all routes
+      path: "/",
     });
 
     return res.json(user);

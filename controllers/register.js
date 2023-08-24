@@ -1,4 +1,4 @@
-import { getUserFromDB } from "./helpers.js";
+import { getUserFromDB, newSession } from "./helpers.js";
 
 const handleRegister = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;
@@ -43,6 +43,20 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
 
     // Retreiving the new user from the database
     const response = await getUserFromDB(data[0].userid, dataBase);
+
+    // Creating a new session for the user
+    const session = await newSession(data[0].userid, dataBase);
+
+    const { session_id, expires_at } = session;
+
+    // Setting the session cookie
+    res.cookie("rfs_session_id", session_id, {
+      httpOnly: true,
+      sameSite: "None",
+      secure: true,
+      expires: expires_at,
+      path: "/",
+    });
 
     return res.json(response);
   } catch (err) {
