@@ -24,7 +24,6 @@ import {
   handleItemUpdate,
 } from "./controllers/wardrobe.js";
 import handleProfileImageUpload from "./controllers/users/image.js";
-import handleGetFilterOptions from "./controllers/filterOptions.js";
 import {
   handleAddToFavorites,
   handleDeleteFavorites,
@@ -67,10 +66,6 @@ app.get("/", (req, res) => {
 app.get("/items", (req, res) => handleGetItems(req, res, dataBase));
 app.get("/item/:id", (req, res) => handleGetItemById(req, res, dataBase));
 
-// Disabled for now, trying to handle filterOptions in the client
-// app.get("/filterOptions", (req, res) =>
-//   handleGetFilterOptions(req, res, dataBase)
-// );
 app.get("/users/profile/:id", (req, res) =>
   handleProfileGet(req, res, dataBase)
 );
