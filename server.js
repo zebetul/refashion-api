@@ -57,8 +57,20 @@ const PORT = process.env.PORT || 8000;
 
 app.use(express.json());
 app.use(fileupload());
-app.use(cors());
 app.use(cookieParser());
+
+const allowedOrigins = ["https://restil.onrender.com"];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Server running!");
