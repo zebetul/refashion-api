@@ -5,6 +5,7 @@ import {
   DeleteObjectsCommand,
 } from "@aws-sdk/client-s3";
 import { OAuth2Client } from "google-auth-library";
+import crypto from "crypto";
 
 // AWS S3 configuration
 const REGION = "eu-north-1";
@@ -290,7 +291,7 @@ export const validateGoogleToken = async function (token) {
 
 export const newSession = async function (userID, dataBase) {
   // Generate sessionID
-  const sessionID = `${userID}_${Math.floor(Math.random() * 1000000000)}`;
+  const sessionID = `${userID}_${crypto.randomUUID()}`;
 
   // store sessionID in database
   const session = await dataBase("sessions")
