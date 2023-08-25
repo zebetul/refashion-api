@@ -5,6 +5,7 @@ import knex from "knex";
 import fileupload from "express-fileupload";
 import cookieParser from "cookie-parser";
 
+import { authenticateUser } from "./controllers/helpers.js";
 import handleRegister from "./controllers/register.js";
 import handleSignIn from "./controllers/signIn.js";
 import {
@@ -73,6 +74,7 @@ app.use(fileupload());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
+// PUBLIC ROUTES
 app.get("/", (req, res) => {
   res.send("Server running!");
 });
@@ -85,13 +87,17 @@ app.get("/users/profile/:id", (req, res) =>
 app.get("/wardrobe/:id", (req, res) =>
   handleGetUserWardrobe(req, res, dataBase)
 );
-app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
 app.get("/sessions", (req, res) => handleSession(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/google", (req, res) => handleToken(req, res, dataBase));
-app.post("/signout", (req, res) => handleSignOut(req, res, dataBase));
+app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
+
+// PRIVATE ROUTES
+app.use(authenticateUser(dataBase));
+app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
+
 app.post("/users/profile/:id", (req, res) =>
   handleProfileUpdate(req, res, dataBase)
 );
@@ -112,7 +118,7 @@ app.post("/orders", (req, res) => handlePostOrder(req, res, dataBase));
 app.post("/orders/update_status", (req, res) =>
   handleUpdateStatus(req, res, dataBase)
 );
-app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
+app.post("/signout", (req, res) => handleSignOut(req, res, dataBase));
 
 app.delete("/items", (req, res) => handleDeleteItem(req, res, dataBase));
 app.delete("/favorites", (req, res) =>

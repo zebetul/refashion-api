@@ -1,11 +1,11 @@
 import { getUserFromDB } from "./helpers.js";
 
 const handleSession = async function (req, res, dataBase) {
+  const { rfs_session_id } = req.cookies;
+
+  if (!rfs_session_id) return res.json("no session");
+
   try {
-    const { rfs_session_id } = req.cookies;
-
-    if (!rfs_session_id) return res.json("no session");
-
     const session = await dataBase
       .select("*")
       .from("sessions")
