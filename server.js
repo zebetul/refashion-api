@@ -5,7 +5,6 @@ import knex from "knex";
 import fileupload from "express-fileupload";
 import cookieParser from "cookie-parser";
 
-import { authenticateUser } from "./controllers/helpers.js";
 import handleRegister from "./controllers/register.js";
 import handleSignIn from "./controllers/signIn.js";
 import {
@@ -69,6 +68,32 @@ const corsOptions = {
   credentials: true, // Allow credentials to be sent
 };
 
+/**
+ * Authenticate user based on sessionID cookie if it exists in the database
+ * @param {Object} dataBase database object
+ * @returns {Object} response object with error message if the user is not authenticated or next() if the user is authenticated
+ * @author Cristi Sebeni
+ **/
+const authenticateUser = async function (req, res, next) {
+  const { rfs_session_id } = req.cookies;
+
+  if (!rfs_session_id) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  // Check if the sessionID is in the database
+  const session = await dataBase("sessions")
+    .select("*")
+    .where("session_id", "=", rfs_session_id)
+    .first();
+
+  if (!session) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  next();
+};
+
 app.use(express.json());
 app.use(fileupload());
 app.use(cookieParser());
@@ -95,85 +120,55 @@ app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
 
 // PRIVATE ROUTES
-app.get(
-  "/favorites/:id",
-  () => authenticateUser(dataBase),
-  (req, res) => handleGetFavorites(req, res, dataBase)
+app.get("/favorites/:id", authenticateUser, (req, res) =>
+  handleGetFavorites(req, res, dataBase)
 );
 
-app.post(
-  "/users/profile/:id",
-  () => authenticateUser(dataBase),
-  (req, res) => handleProfileUpdate(req, res, dataBase)
+app.post("/users/profile/:id", authenticateUser, (req, res) =>
+  handleProfileUpdate(req, res, dataBase)
 );
-app.post(
-  "/users/image",
-  () => authenticateUser(dataBase),
-  (req, res) => handleProfileImageUpload(req, res, dataBase)
+app.post("/users/image", authenticateUser, (req, res) =>
+  handleProfileImageUpload(req, res, dataBase)
 );
-app.post(
-  "/messages",
-  () => authenticateUser(dataBase),
-  (req, res) => handleMessage(req, res, dataBase)
+app.post("/messages", authenticateUser, (req, res) =>
+  handleMessage(req, res, dataBase)
 );
-app.post(
-  "/messages/mark_as_read",
-  () => authenticateUser(dataBase),
-  (req, res) => markMessagesAsRead(req, res, dataBase)
+app.post("/messages/mark_as_read", authenticateUser, (req, res) =>
+  markMessagesAsRead(req, res, dataBase)
 );
-app.post(
-  "/wardrobe",
-  () => authenticateUser(dataBase),
-  (req, res) => handleNewItemUpload(req, res, dataBase)
+app.post("/wardrobe", authenticateUser, (req, res) =>
+  handleNewItemUpload(req, res, dataBase)
 );
 app.post("/wardrobe/update_item/:id", (req, res) =>
   handleItemUpdate(req, res, dataBase)
 );
-app.post(
-  "/favorites",
-  () => authenticateUser(dataBase),
-  (req, res) => handleAddToFavorites(req, res, dataBase)
+app.post("/favorites", authenticateUser, (req, res) =>
+  handleAddToFavorites(req, res, dataBase)
 );
-app.post(
-  "/exchange",
-  () => authenticateUser(dataBase),
-  (req, res) => handleExchange(req, res, dataBase)
+app.post("/exchange", authenticateUser, (req, res) =>
+  handleExchange(req, res, dataBase)
 );
-app.post(
-  "/orders",
-  () => authenticateUser(dataBase),
-  (req, res) => handlePostOrder(req, res, dataBase)
+app.post("/orders", authenticateUser, (req, res) =>
+  handlePostOrder(req, res, dataBase)
 );
-app.post(
-  "/orders/update_status",
-  () => authenticateUser(dataBase),
-  (req, res) => handleUpdateStatus(req, res, dataBase)
+app.post("/orders/update_status", authenticateUser, (req, res) =>
+  handleUpdateStatus(req, res, dataBase)
 );
-app.post(
-  "/signout",
-  () => authenticateUser(dataBase),
-  (req, res) => handleSignOut(req, res, dataBase)
+app.post("/signout", authenticateUser, (req, res) =>
+  handleSignOut(req, res, dataBase)
 );
 
-app.delete(
-  "/items",
-  () => authenticateUser(dataBase),
-  (req, res) => handleDeleteItem(req, res, dataBase)
+app.delete("/items", authenticateUser, (req, res) =>
+  handleDeleteItem(req, res, dataBase)
 );
-app.delete(
-  "/favorites",
-  () => authenticateUser(dataBase),
-  (req, res) => handleDeleteFavorites(req, res, dataBase)
+app.delete("/favorites", authenticateUser, (req, res) =>
+  handleDeleteFavorites(req, res, dataBase)
 );
-app.delete(
-  "/orders",
-  () => authenticateUser(dataBase),
-  (req, res) => handleDeleteOrder(req, res, dataBase)
+app.delete("/orders", authenticateUser, (req, res) =>
+  handleDeleteOrder(req, res, dataBase)
 );
-app.delete(
-  "/users/profile/:id",
-  () => authenticateUser(dataBase),
-  (req, res) => handleDeleteProfile(req, res, dataBase)
+app.delete("/users/profile/:id", authenticateUser, (req, res) =>
+  handleDeleteProfile(req, res, dataBase)
 );
 
 app.listen(PORT, () => {
