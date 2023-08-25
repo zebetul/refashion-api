@@ -95,38 +95,85 @@ app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
 
 // PRIVATE ROUTES
-app.use(authenticateUser(dataBase));
-app.get("/favorites/:id", (req, res) => handleGetFavorites(req, res, dataBase));
+app.get(
+  "/favorites/:id",
+  () => authenticateUser(dataBase),
+  (req, res) => handleGetFavorites(req, res, dataBase)
+);
 
-app.post("/users/profile/:id", (req, res) =>
-  handleProfileUpdate(req, res, dataBase)
+app.post(
+  "/users/profile/:id",
+  () => authenticateUser(dataBase),
+  (req, res) => handleProfileUpdate(req, res, dataBase)
 );
-app.post("/users/image", (req, res) =>
-  handleProfileImageUpload(req, res, dataBase)
+app.post(
+  "/users/image",
+  () => authenticateUser(dataBase),
+  (req, res) => handleProfileImageUpload(req, res, dataBase)
 );
-app.post("/messages", (req, res) => handleMessage(req, res, dataBase));
-app.post("/messages/mark_as_read", (req, res) =>
-  markMessagesAsRead(req, res, dataBase)
+app.post(
+  "/messages",
+  () => authenticateUser(dataBase),
+  (req, res) => handleMessage(req, res, dataBase)
 );
-app.post("/wardrobe", (req, res) => handleNewItemUpload(req, res, dataBase));
+app.post(
+  "/messages/mark_as_read",
+  () => authenticateUser(dataBase),
+  (req, res) => markMessagesAsRead(req, res, dataBase)
+);
+app.post(
+  "/wardrobe",
+  () => authenticateUser(dataBase),
+  (req, res) => handleNewItemUpload(req, res, dataBase)
+);
 app.post("/wardrobe/update_item/:id", (req, res) =>
   handleItemUpdate(req, res, dataBase)
 );
-app.post("/favorites", (req, res) => handleAddToFavorites(req, res, dataBase));
-app.post("/exchange", (req, res) => handleExchange(req, res, dataBase));
-app.post("/orders", (req, res) => handlePostOrder(req, res, dataBase));
-app.post("/orders/update_status", (req, res) =>
-  handleUpdateStatus(req, res, dataBase)
+app.post(
+  "/favorites",
+  () => authenticateUser(dataBase),
+  (req, res) => handleAddToFavorites(req, res, dataBase)
 );
-app.post("/signout", (req, res) => handleSignOut(req, res, dataBase));
+app.post(
+  "/exchange",
+  () => authenticateUser(dataBase),
+  (req, res) => handleExchange(req, res, dataBase)
+);
+app.post(
+  "/orders",
+  () => authenticateUser(dataBase),
+  (req, res) => handlePostOrder(req, res, dataBase)
+);
+app.post(
+  "/orders/update_status",
+  () => authenticateUser(dataBase),
+  (req, res) => handleUpdateStatus(req, res, dataBase)
+);
+app.post(
+  "/signout",
+  () => authenticateUser(dataBase),
+  (req, res) => handleSignOut(req, res, dataBase)
+);
 
-app.delete("/items", (req, res) => handleDeleteItem(req, res, dataBase));
-app.delete("/favorites", (req, res) =>
-  handleDeleteFavorites(req, res, dataBase)
+app.delete(
+  "/items",
+  () => authenticateUser(dataBase),
+  (req, res) => handleDeleteItem(req, res, dataBase)
 );
-app.delete("/orders", (req, res) => handleDeleteOrder(req, res, dataBase));
-app.delete("/users/profile/:id", (req, res) =>
-  handleDeleteProfile(req, res, dataBase)
+app.delete(
+  "/favorites",
+  () => authenticateUser(dataBase),
+  (req, res) => handleDeleteFavorites(req, res, dataBase)
+);
+app.delete(
+  "/orders",
+  () => authenticateUser(dataBase),
+  (req, res) => handleDeleteOrder(req, res, dataBase)
+);
+app.delete(
+  "/users/profile/:id",
+  () => authenticateUser(dataBase),
+  (req, res) => handleDeleteProfile(req, res, dataBase)
 );
 
 app.listen(PORT, () => {
