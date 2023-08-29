@@ -97,9 +97,7 @@ export const handleGetItems = async function (req, res, dataBase) {
     // Execute the query
     response.items = await query;
 
-    response.items.length > 0
-      ? res.json(response)
-      : res.json("Something went wrong.");
+    response.items ? res.json(response) : res.json("Something went wrong.");
   } catch (err) {
     console.error(err);
     res.json("🔥🔥🔥 Error retrieving items from the database");
