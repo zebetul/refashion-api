@@ -112,7 +112,25 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
 
     const orders = await getOrders(userID, dataBase);
 
-    res.json(orders);
+    const receivedPendingOrdersNr = orders.reduce(
+      (acc, order) =>
+        order.seller_id === userID &&
+        (order.status === "Comandă plasată." ||
+          order.status === "În curs de procesare.")
+          ? acc + 1
+          : acc,
+      0
+    );
+
+    const sentPendingOrdersNr = orders.reduce(
+      (acc, order) =>
+        order.buyer_id === userID && order.status === "Expediată."
+          ? acc + 1
+          : acc,
+      0
+    );
+
+    res.json({ orders, receivedPendingOrdersNr, sentPendingOrdersNr });
   } catch (err) {
     console.log(err);
     res.status(400).json("error updating order");
