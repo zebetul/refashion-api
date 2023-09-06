@@ -56,7 +56,12 @@ const dataBase = knex({
 
 const PORT = process.env.PORT || 8000;
 
-const allowedOrigins = ["http://localhost:3000", "https://restil.onrender.com"];
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://restil.onrender.com",
+  "https://restil.ro",
+  "https://www.restil.ro",
+];
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.includes(origin)) {
