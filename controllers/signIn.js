@@ -42,8 +42,9 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     // Set the session cookie
     res.cookie("rfs_session_id", session_id, {
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: true,
+      domain: ".restil.ro",
       expires: expires_at,
       path: "/",
     });
