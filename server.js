@@ -108,6 +108,9 @@ app.use(cors(corsOptions));
 app.get("/", (req, res) => {
   res.send("Server running!");
 });
+app.get("/googleClientId", (req, res) => {
+  res.json({ googleClientId: process.env.GOOGLE_CLIENT_ID });
+});
 app.get("/items", (req, res) => handleGetItems(req, res, dataBase));
 app.get("/item/:id", (req, res) => handleGetItemById(req, res, dataBase));
 
@@ -125,6 +128,7 @@ app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
 
 // PRIVATE ROUTES
+
 app.get("/favorites/:id", authenticateUser, (req, res) =>
   handleGetFavorites(req, res, dataBase)
 );
