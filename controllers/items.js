@@ -33,10 +33,15 @@ export const handleGetItems = async function (req, res, dataBase) {
       )
       .groupBy("items.itemid");
 
-    // Apply search query if provided
+    // Apply search query if provided and search in title, category, brand and section
     if (searchQuery) {
       // The ilike operator is used to perform case-insensitive LIKE comparisons
-      query = query.where("items.title", "ilike", `%${searchQuery}%`);
+      // The % wildcard matches any string of zero or more characters
+      query = query.where(function () {
+        this.where("items.title", "ilike", `%${searchQuery}%`)
+          .orWhere("items.category", "ilike", `%${searchQuery}%`)
+          .orWhere("items.brand", "ilike", `%${searchQuery}%`);
+      });
     }
 
     // Apply filters.
