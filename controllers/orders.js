@@ -85,7 +85,7 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
         cancel_reason: req.body.cancelReason,
       });
 
-      // Flag all item from itemsID array to status available
+      // Flag all item from itemsID array to status ''
       const itemsID = await dataBase("orders")
         .select("items_id")
         .where({ order_id: orderId });
@@ -146,7 +146,7 @@ export const handleDeleteOrder = async (req, res, dataBase) => {
   try {
     await dataBase("orders").where({ order_id: orderId }).del();
 
-    // Flag all item from itemsID array to status available
+    // Flag all item from itemsID array to status ''
     itemsID.forEach(async (item_id) => {
       await dataBase("items").where({ itemid: item_id }).update({ status: "" });
     });
