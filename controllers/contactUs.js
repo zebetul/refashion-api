@@ -9,20 +9,22 @@ const handleContactUs = async (req, res, dataBase) => {
 
   // Send email to contact@restil.ro
   const transporter = nodemailer.createTransport({
-    service: "Gmail", // Use the email service (e.g., Gmail, Outlook)
-    auth: {
-      user: "sebenicristi@gmail.com", // Your email address
-      pass: process.env.GOOGLE_EMAIL_PASS, // Your email password
+    SES: {
+      // Your AWS SES region
+      region: "eu-west-1",
+      // Your AWS access key
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      // Your AWS secret access key
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
   });
 
   // Email data
   const mailOptions = {
-    from: "sebenicristi@gmail.com", // Sender's email address
-    to: "contact@restil.ro", // Recipient's email address
-    subject: `You got a message from: ${user_email}`, // Email subject
-    text: message_content, // Email body (text)
-    // You can also use `html` property for HTML content
+    from: "contact@restil.ro",
+    to: "sebenicristi@gmail.com", // Replace with the recipient's email address
+    subject: `New message from ${user_email}`,
+    text: message_content,
   };
 
   // Send email
