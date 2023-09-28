@@ -6,6 +6,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
+import nodemailer from "nodemailer";
 
 // AWS S3 configuration
 const REGION = "eu-north-1";
@@ -330,4 +331,37 @@ export const processImages = async function (images) {
   }
 
   return processedImages;
+};
+
+export const sendEmailTo = async function (email, content) {
+  try {
+    // Validate AWS credentials
+    if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+      throw new Error("AWS credentials not provided.");
+    }
+
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+      SES: {
+        region: "eu-west-1",
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    // Email data
+    const mailOptions = {
+      from: "contact@restil.ro",
+      to: email,
+      subject: "Test message",
+      text: content,
+    };
+
+    // Send email
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log("Email sent:", info.response);
+  } catch (error) {
+    console.error("Error sending email:", error.message);
+  }
 };
