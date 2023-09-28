@@ -1,4 +1,4 @@
-import { sendEmailTo } from "./helpers";
+import { sendEmailTo } from "./helpers.js";
 
 const handleContactUs = async (req, res, dataBase) => {
   const { email: user_email, message: message_content } = req.body;
