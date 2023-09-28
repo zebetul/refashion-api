@@ -9,7 +9,7 @@ const handleContactUs = async (req, res, dataBase) => {
 
   // Inserting new message_content in contact_us table
   try {
-    sendEmailTo(user_email, message_content);
+    const responseFromSes = await sendEmailTo(user_email, message_content);
 
     await dataBase("contact_us").insert({
       user_email,
@@ -17,11 +17,25 @@ const handleContactUs = async (req, res, dataBase) => {
       timestamp: new Date(),
     });
 
-    return res.json("Message sent successfully");
-  } catch (err) {
-    console.log(err);
+    console.log(
+      `🟢🟢🟢 Message sent successfully! Here is the response from SES: ${responseFromSes}`
+    );
 
-    return res.status(400).json("Unable to send message");
+    return res
+      .status(200)
+      .json(
+        `🟢🟢🟢 Message sent successfully. Here is the response from SES: ${responseFromSes}`
+      );
+  } catch (err) {
+    console.log(
+      `🔥🔥🔥 This error occured while handling the message on the server: ${err}`
+    );
+
+    return res
+      .status(500)
+      .json(
+        `🔥🔥🔥 This error occured while handling the message on the server: ${err}`
+      );
   }
 };
 export default handleContactUs;
