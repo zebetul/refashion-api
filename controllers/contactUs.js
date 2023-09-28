@@ -18,7 +18,8 @@ const handleContactUs = async (req, res, dataBase) => {
     });
 
     console.log(
-      `🟢🟢🟢 Message sent successfully! Here is the response from SES: ${responseFromSes}`
+      // `🟢🟢🟢 Message sent successfully! Here is the response from SES: ${responseFromSes}`
+      `🟢🟢🟢 Message sent successfully!`
     );
 
     return res.status(200).json(
