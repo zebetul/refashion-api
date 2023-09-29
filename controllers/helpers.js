@@ -337,10 +337,14 @@ export const processImages = async function (images) {
  * Send email via AWS SES to specified email address with specified subject and content.
  * @param {String} email email address to send the email to
  * @param {String} subject email subject
- * @param {String} content email content
+ * @param {String} HTMLcontent email content in HTML format: {@link https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-formatted.html}
  * @returns {Object} response object from AWS SES service
  */
-export const sendEmailTo = async function (email, subject, content) {
+export const sendEmailTo = async function (
+  email = "contact@restil.ro",
+  subject = "Test email",
+  HTMLcontent = "<h1>Test content</h1>"
+) {
   try {
     // Validate AWS credentials
     if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -359,8 +363,8 @@ export const sendEmailTo = async function (email, subject, content) {
           Data: subject,
         },
         Body: {
-          Text: {
-            Data: content,
+          Html: {
+            Data: HTMLcontent,
           },
         },
       },

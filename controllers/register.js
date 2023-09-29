@@ -60,10 +60,10 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     });
 
     // Sending email to new user
-    await sendEmailTo(
-      "contact@restil.ro",
+    sendEmailTo(
+      _,
       `Verificare email: ${email}, nume: ${userName}`,
-      `Salut ${userName}! Verifica-ti adresa de email pentru a putea folosi aplicatia Restil.`
+      `<h1>Salut ${userName}!</h1><p>Verifica-ti adresa de email pentru a putea folosi aplicatia Restil.</p>`
     );
 
     return res.json(response);
