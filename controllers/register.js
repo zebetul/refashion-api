@@ -1,4 +1,4 @@
-import { getUserFromDB, newSession } from "./helpers.js";
+import { getUserFromDB, newSession, sendEmailTo } from "./helpers.js";
 
 const handleRegister = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;
@@ -24,6 +24,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
 
   // New Transaction for inserting new user in database
   const trx = await dataBase.transaction();
+
   try {
     // Inserting new user's password and email in login table
     const newUser = await trx("login").returning("*").insert({
@@ -57,6 +58,13 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
       expires: expires_at,
       path: "/",
     });
+
+    // Sending email to new user
+    await sendEmailTo(
+      "contact@restil.ro",
+      `Verificare email: ${email}, nume: ${userName}`,
+      `Salut ${userName}! Verifica-ti adresa de email pentru a putea folosi aplicatia Restil.`
+    );
 
     return res.json(response);
   } catch (err) {
