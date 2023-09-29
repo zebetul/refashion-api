@@ -12,7 +12,7 @@ const handleContactUs = async (req, res, dataBase) => {
     // const responseFromSes = await sendEmailTo(user_email, message_content);
 
     await dataBase("contact_us").insert({
-      user_emailxxx: user_email,
+      user_email,
       message_content,
       timestamp: new Date(),
     });
