@@ -345,11 +345,7 @@ export const sendEmailTo = async function (email, content) {
     const input = {
       Source: "contact@restil.ro",
       Destination: {
-        ToAddresses: [
-          email,
-          "contact@restil.ro",
-          "success@simulator.amazonses.com",
-        ],
+        ToAddresses: ["contact@restil.ro", "success@simulator.amazonses.com"],
       },
       Message: {
         Subject: {
