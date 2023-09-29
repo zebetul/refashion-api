@@ -352,7 +352,7 @@ export const sendEmailTo = async function (email, content) {
     // Email data
     const mailOptions = {
       from: "contact@restil.ro",
-      to: "contact@restil.ro",
+      to: "success@simulator.amazonses.com",
       subject: "Test message",
       text: content,
     };
