@@ -1,5 +1,5 @@
 import { getUserFromDB, newSession, sendEmailTo } from "./helpers.js";
-import emailHtmlMarkup from "./constants/emailHtmlMarkup.js";
+import verifyEmailHtmlMarkup from "./constants/verifyEmailHtmlMarkup.js";
 
 const handleRegister = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;
@@ -63,7 +63,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     sendEmailTo(
       "contact@restil.ro",
       `Verificare email: ${email}, nume: ${userName}`,
-      emailHtmlMarkup
+      verifyEmailHtmlMarkup
     );
 
     return res.json(response);

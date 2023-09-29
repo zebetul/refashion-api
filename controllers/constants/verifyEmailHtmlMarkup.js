@@ -1,4 +1,4 @@
-const emailHtmlMarkup = `
+const verifyEmailHtmlMarkup = `
 <div style="text-align: center">
   <a href="https://restil.ro" target="_blank">
     <img
@@ -50,6 +50,7 @@ const emailHtmlMarkup = `
     <div
       style="
         display: flex;
+        flex-direction: row;
         justify-content: center;
         align-items: center;
         gap: 0.5rem;
@@ -70,4 +71,4 @@ const emailHtmlMarkup = `
   </footer>
 </div>`;
 
-export default emailHtmlMarkup;
+export default verifyEmailHtmlMarkup;
