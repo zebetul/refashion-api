@@ -27,15 +27,9 @@ const handleContactUs = async (req, res, dataBase) => {
       `🟢🟢🟢 Message sent successfully.`
     );
   } catch (err) {
-    console.log(
-      `🔥🔥🔥 This error occured while handling the message on the server: ${err}`
-    );
+    console.log(`🔥🔥🔥 Server error: ${err}`);
 
-    return res
-      .status(500)
-      .json(
-        `🔥🔥🔥 This error occured while handling the message on the server: ${err}`
-      );
+    return res.status(500).json(`🔥🔥🔥 Server error: ${err}`);
   }
 };
 export default handleContactUs;
