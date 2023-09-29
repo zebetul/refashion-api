@@ -11,8 +11,6 @@ const verifyEmailHtmlMarkup = function (userName, session_id) {
 
         <h1 style="margin: 20px 0">Salut ${userName}!</h1>
 
-        <p>Verifică-ți adresa de email pentru a putea folosi aplicația Restil.</p>
-
         <div style="margin: 50px 0">
           <p style="margin: 0 0 20px 0">
             Click pe butonul de mai jos pentru a confirma adresa de email:
@@ -48,28 +46,19 @@ const verifyEmailHtmlMarkup = function (userName, session_id) {
         
         <p style="margin: 20px 0">Echipa Restil</p>
 
-        <footer
-        style="
-          margin: 20px 0;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          gap: 0.5rem;
-        "
-      >
-        <span>
-          <img
-            src="https://rfs-logo-images.s3.eu-west-1.amazonaws.com/restil-h_50_px.webp"
-            alt="Restil Logo"
-            style="height: 28px"
-          />
-        </span>
+        <footer style="margin: 20px 0; column-gap: 0.5rem">
+          <span style="display: inline-block; vertical-align: middle;">
+            <img
+              src="https://rfs-logo-images.s3.eu-west-1.amazonaws.com/restil-h_50_px.webp"
+              alt="Restil Logo"
+              style="height: 28px"
+            />
+          </span>
 
-        <span>© 2023</span>
+          <span style="padding-bottom: 10px; display: inline-block">© 2023</span>
 
-        <span>Toate drepturile rezervate.</span>
-      </footer>
+          <span style="padding-bottom: 10px;  display: inline-block">Toate drepturile rezervate.</span>
+        </footer>
       </div>`;
 };
 
