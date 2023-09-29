@@ -11,7 +11,12 @@ const handleContactUs = async (req, res, dataBase) => {
     await sendEmailTo(
       "contact@restil.ro",
       `Mesaj nou de la ${user_email}`,
-      message_content
+      `
+      <h1>
+        Mesaj nou de la ${user_email}
+      </h1>
+      
+      <p>${message_content}</p>`
     );
 
     await dataBase("contact_us").insert({
