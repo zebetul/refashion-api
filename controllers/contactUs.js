@@ -9,7 +9,7 @@ const handleContactUs = async (req, res, dataBase) => {
 
   // Inserting new message_content in contact_us table
   try {
-    // const responseFromSes = await sendEmailTo(user_email, message_content);
+    const responseFromSes = await sendEmailTo(user_email, message_content);
 
     await dataBase("contact_us").insert({
       user_email,
