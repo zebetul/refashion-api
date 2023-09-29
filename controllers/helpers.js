@@ -364,7 +364,8 @@ export const sendEmailTo = async function (email, content) {
 
     return info;
   } catch (error) {
-    console.error("Error sending email:", error.message);
+    console.log(`Error sending email: ${error.message}`);
+    console.log(error);
 
     throw error;
   }
