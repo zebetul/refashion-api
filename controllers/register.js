@@ -62,9 +62,9 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     // Sending email to new user
     const emailHtmlMarkup = `
       <div style="text-align: center;">
-          <img src="https://rfs-logo-images.s3.eu-west-1.amazonaws.com/restil-h_50_px.webp" alt="Restil Logo" style="width: 100px; height: 100px; margin: 20px 0;">
+          <img src="https://rfs-logo-images.s3.eu-west-1.amazonaws.com/restil-h_50_px.webp" alt="Restil Logo" style="height: 50px margin: 20px 0;">
 
-          <h1>Salut ${userName}!</h1>
+          <h1 style="margin: 20px 0;">Salut ${userName}!</h1>
           
           <p>Verifica-ti adresa de email pentru a putea folosi aplicatia Restil.</p>
        </div>`;
