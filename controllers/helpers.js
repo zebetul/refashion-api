@@ -4,9 +4,9 @@ import {
   PutObjectCommand,
   DeleteObjectsCommand,
 } from "@aws-sdk/client-s3";
+import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
-import nodemailer from "nodemailer";
 
 // AWS S3 configuration
 const REGION = "eu-north-1";
@@ -340,29 +340,33 @@ export const sendEmailTo = async function (email, content) {
       throw new Error("AWS credentials not provided.");
     }
 
-    // Create a transporter
-    const transporter = nodemailer.createTransport({
-      SES: {
-        region: "eu-west-1",
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      },
-    });
+    const client = new SESClient(); // no need to set credentials/region as these are automatically set from environment variables
 
-    // Email data
-    const mailOptions = {
-      from: "contact@restil.ro",
-      to: "success@simulator.amazonses.com",
-      subject: "Test message",
-      text: content,
+    const input = {
+      Source: "contact@restil.ro",
+      Destination: {
+        ToAddresses: [
+          email,
+          "contact@restil.ro",
+          "success@simulator.amazonses.com",
+        ],
+      },
+      Message: {
+        Subject: {
+          Data: "Test message",
+        },
+        Body: {
+          Text: {
+            Data: content,
+          },
+        },
+      },
     };
 
-    // Send email
-    const info = await transporter.sendMail(mailOptions);
+    const command = new SendEmailCommand(input);
+    const response = await client.send(command);
 
-    console.log("Email sent:", info.response);
-
-    return info;
+    return response;
   } catch (error) {
     throw error;
   }
