@@ -5,14 +5,14 @@ const handleContactUs = async (req, res, dataBase) => {
 
   // INPUT VALIDATION
   if (!user_email || !message_content)
-    return res.status(400).json("Missing required fields.");
+    return res.status(401).json("Missing required fields.");
 
   // Inserting new message_content in contact_us table
   try {
     // const responseFromSes = await sendEmailTo(user_email, message_content);
 
     await dataBase("contact_us").insert({
-      user_email,
+      user_emailxxx: user_email,
       message_content,
       timestamp: new Date(),
     });
