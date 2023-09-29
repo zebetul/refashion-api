@@ -27,9 +27,9 @@ const handleContactUs = async (req, res, dataBase) => {
       `🟢🟢🟢 Message sent successfully.`
     );
   } catch (err) {
-    console.log(`🔥🔥🔥 Server error: ${err}`);
+    console.log(`🔥🔥🔥 Server error: ${err.message}`);
 
-    return res.status(500).json(`🔥🔥🔥 Server error: ${err}`);
+    return res.status(500).json(`🔥🔥🔥 Server error: ${err.message}`);
   }
 };
 export default handleContactUs;
