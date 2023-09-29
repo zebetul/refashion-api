@@ -64,7 +64,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     sendEmailTo(
       "contact@restil.ro",
       `Verificare email: ${email}`,
-      verifyEmailHtmlMarkup(userName, session_id)
+      verifyEmailHtmlMarkup(session_id)
     );
 
     return res.json(response);
