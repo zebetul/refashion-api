@@ -11,6 +11,8 @@ const handleContactUs = async (req, res, dataBase) => {
   try {
     const responseFromSes = await sendEmailTo(user_email, message_content);
 
+    console.log(`🟢🟢🟢 Message sent successfully! ${responseFromSes}`);
+
     await dataBase("contact_us").insert({
       user_email,
       message_content,
