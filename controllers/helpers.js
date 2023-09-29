@@ -333,6 +333,13 @@ export const processImages = async function (images) {
   return processedImages;
 };
 
+/**
+ * Send email via AWS SES to specified email address with specified subject and content.
+ * @param {String} email email address to send the email to
+ * @param {String} subject email subject
+ * @param {String} content email content
+ * @returns {Object} response object from AWS SES service
+ */
 export const sendEmailTo = async function (email, subject, content) {
   try {
     // Validate AWS credentials

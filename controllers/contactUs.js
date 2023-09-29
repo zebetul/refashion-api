@@ -7,7 +7,6 @@ const handleContactUs = async (req, res, dataBase) => {
   if (!user_email || !message_content)
     return res.status(401).json("Missing required fields.");
 
-  // Inserting new message_content in contact_us table
   try {
     await sendEmailTo(
       "contact@restil.ro",
@@ -21,18 +20,8 @@ const handleContactUs = async (req, res, dataBase) => {
       timestamp: new Date(),
     });
 
-    console.log(
-      // `🟢🟢🟢 Message sent successfully! Here is the response from SES: ${responseFromSes}`
-      `🟢🟢🟢 Message sent successfully!`
-    );
-
-    return res.status(200).json(
-      // `🟢🟢🟢 Message sent successfully. Here is the response from SES: ${responseFromSes}`
-      `🟢🟢🟢 Message sent successfully.`
-    );
+    return res.status(200).json(`🟢🟢🟢 Message sent successfully.`);
   } catch (err) {
-    console.log(`🔥🔥🔥 Server error at ContactUs: ${err.message}`);
-
     return res
       .status(500)
       .json(`🔥🔥🔥 Server error at ContactUs: ${err.message}`);
