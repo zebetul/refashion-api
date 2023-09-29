@@ -333,7 +333,7 @@ export const processImages = async function (images) {
   return processedImages;
 };
 
-export const sendEmailTo = async function (email, content) {
+export const sendEmailTo = async function (email, subject, content) {
   try {
     // Validate AWS credentials
     if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
@@ -345,11 +345,11 @@ export const sendEmailTo = async function (email, content) {
     const input = {
       Source: "contact@restil.ro",
       Destination: {
-        ToAddresses: ["contact@restil.ro", "success@simulator.amazonses.com"],
+        ToAddresses: [email],
       },
       Message: {
         Subject: {
-          Data: "Test message",
+          Data: subject,
         },
         Body: {
           Text: {
