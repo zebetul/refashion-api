@@ -12,10 +12,10 @@ const handleContactUs = async (req, res, dataBase) => {
       "contact@restil.ro",
       `Mesaj nou de la ${user_email}`,
       `
-      <h1>
-        Mesaj nou de la ${user_email}
+      <h1 style="font-size: 2rem; margin-bottom: 10px">
+        Mesaj nou de la ${user_email}:
       </h1>
-      
+
       <p>${message_content}</p>`
     );
 
