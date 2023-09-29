@@ -54,8 +54,9 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     // Setting the session cookie
     res.cookie("rfs_session_id", session_id, {
       httpOnly: true,
-      sameSite: "None",
+      sameSite: "Lax",
       secure: true,
+      domain: ".restil.ro",
       expires: expires_at,
       path: "/",
     });
@@ -63,7 +64,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     sendEmailTo(
       "contact@restil.ro",
       `Verificare email: ${email}, nume: ${userName}`,
-      verifyEmailHtmlMarkup
+      verifyEmailHtmlMarkup(userName, session_id)
     );
 
     return res.json(response);

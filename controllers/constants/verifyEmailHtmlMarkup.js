@@ -1,4 +1,5 @@
-const verifyEmailHtmlMarkup = `
+const verifyEmailHtmlMarkup = function (userName, session_id) {
+  return `
 <div style="text-align: center">
   <a href="https://restil.ro" target="_blank">
     <img
@@ -8,7 +9,7 @@ const verifyEmailHtmlMarkup = `
     />
   </a>
 
-  <h1 style="margin: 20px 0">Salut Dorin!</h1>
+  <h1 style="margin: 20px 0">Salut ${userName}!</h1>
 
   <p>Verifică-ți adresa de email pentru a putea folosi aplicația Restil.</p>
 
@@ -18,7 +19,7 @@ const verifyEmailHtmlMarkup = `
     </p>
 
     <a
-      href="https://restil.ro/email-confirmation/session_id"
+      href="https://restil.ro/email-confirmation/${session_id}"
       style="
         text-decoration: none;
         color: #fff;
@@ -49,7 +50,7 @@ const verifyEmailHtmlMarkup = `
   <footer style="margin: 20px 0">
     <div
       style="
-        display: flex;
+        display: inline-flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
@@ -70,5 +71,6 @@ const verifyEmailHtmlMarkup = `
     </div>
   </footer>
 </div>`;
+};
 
 export default verifyEmailHtmlMarkup;
