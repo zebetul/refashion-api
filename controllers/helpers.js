@@ -341,7 +341,7 @@ export const processImages = async function (images) {
  * @returns {Object} response object from AWS SES service
  */
 export const sendEmailTo = async function (
-  email = "noreply@restil.ro",
+  email = "contact@restil.ro",
   subject = "Test email",
   HTMLcontent = "<h1>Test content</h1>"
 ) {
@@ -354,7 +354,7 @@ export const sendEmailTo = async function (
     const client = new SESClient({ region: "eu-north-1" });
 
     const input = {
-      Source: "contact@restil.ro",
+      Source: "noreply@restil.ro",
       Destination: {
         ToAddresses: [email],
       },
