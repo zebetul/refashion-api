@@ -39,6 +39,7 @@ import {
 } from "./controllers/orders.js";
 import handleContactUs from "./controllers/contactUs.js";
 import handleSignOut from "./controllers/signOut.js";
+import handleVerifyEmail from "./controllers/verifyEmail.js";
 
 const app = express();
 
@@ -126,6 +127,9 @@ app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
+app.post("/verify-email/:session_id", (req, res) =>
+  handleVerifyEmail(req, res, dataBase)
+);
 
 // PRIVATE ROUTES
 
