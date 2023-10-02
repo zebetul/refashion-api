@@ -351,7 +351,7 @@ export const sendEmailTo = async function (
       throw new Error("AWS credentials not provided.");
     }
 
-    const client = new SESClient({ region: "eu-west-1" });
+    const client = new SESClient({ region: "eu-north-1" });
 
     const input = {
       Source: "contact@restil.ro",

@@ -61,11 +61,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
       path: "/",
     });
 
-    sendEmailTo(
-      "contact@restil.ro",
-      `Verificare email: ${email}`,
-      verifyEmailHtmlMarkup(session_id)
-    );
+    sendEmailTo(email, `Verificare email`, verifyEmailHtmlMarkup(session_id));
 
     return res.json(response);
   } catch (err) {
