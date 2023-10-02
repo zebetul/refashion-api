@@ -63,7 +63,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
 
     sendEmailTo(
       "sebenicristi@gmail.com",
-      `Verificare email pentru ${email}`,
+      "Verifică-ți email-ul",
       verifyEmailHtmlMarkup(session_id)
     );
 
