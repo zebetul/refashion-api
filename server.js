@@ -122,17 +122,16 @@ app.get("/wardrobe/:id", (req, res) =>
   handleGetUserWardrobe(req, res, dataBase)
 );
 app.get("/sessions", (req, res) => handleSession(req, res, dataBase));
+app.get("/verify-email/:session_id", (req, res) =>
+  handleVerifyEmail(req, res, dataBase)
+);
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
-app.post("/verify-email/:session_id", (req, res) =>
-  handleVerifyEmail(req, res, dataBase)
-);
 
 // PRIVATE ROUTES
-
 app.get("/favorites/:id", authenticateUser, (req, res) =>
   handleGetFavorites(req, res, dataBase)
 );
