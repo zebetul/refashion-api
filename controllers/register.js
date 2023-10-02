@@ -61,7 +61,11 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
       path: "/",
     });
 
-    sendEmailTo(email, `Verificare email`, verifyEmailHtmlMarkup(session_id));
+    sendEmailTo(
+      "sebenicristi@gmail.com",
+      `Verificare email pentru ${email}`,
+      verifyEmailHtmlMarkup(session_id)
+    );
 
     return res.json(response);
   } catch (err) {
