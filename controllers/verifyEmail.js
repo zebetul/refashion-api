@@ -1,17 +1,33 @@
 const handleVerifyEmail = async (req, res, dataBase) => {
   const { session_id } = req.params;
 
-  const session = await dataBase("sessions").where({ session_id }).first();
+  // INPUT VALIDATION
+  if (!session_id)
+    return res
+      .status(400)
+      .json(`🔥🔥🔥 Missing requiered fields: ${err.message}`);
 
-  if (!session) return res.json("session not found");
+  try {
+    const session = await dataBase("sessions").where({ session_id }).first();
 
-  const response = await dataBase("users")
-    .where({ userid: session.user_id })
-    .update({ email_verified: true })
-    .first();
+    if (!session)
+      return res
+        .status(404)
+        .json(`🔥🔥🔥 Error, session not found: ${err.message}`);
 
-  if (!response) return res.json("error updating user");
+    const response = await dataBase("users")
+      .where({ userid: session.user_id })
+      .update({ email_verified: true })
+      .first();
 
-  res.json("user updated");
+    if (!response)
+      return res.status(404).json(`🔥🔥🔥 Error updating user: ${err.message}`);
+
+    return res.status(200).json(`🟢🟢🟢 Email verification successfull.`);
+  } catch (err) {
+    return res
+      .status(500)
+      .json(`🔥🔥🔥 Server error at VerifyEmail: ${err.message}`);
+  }
 };
 export default handleVerifyEmail;
