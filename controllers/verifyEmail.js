@@ -19,8 +19,6 @@ const handleVerifyEmail = async (req, res, dataBase) => {
       .where({ userid: session.user_id })
       .update({ email_verified: true });
 
-    console.log(response);
-
     if (!response)
       return res.status(404).json(`🔥🔥🔥 Error updating user: ${err.message}`);
 
