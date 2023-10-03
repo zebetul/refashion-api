@@ -24,7 +24,7 @@ const handleVerifyEmail = async (req, res, dataBase) => {
     if (!response)
       return res.status(404).json(`🔥🔥🔥 Error updating user: ${err.message}`);
 
-    return res.status(200).json(`🟢🟢🟢 Email verification successfull.`);
+    return res.status(200).json(`Success!`);
   } catch (err) {
     return res
       .status(500)
