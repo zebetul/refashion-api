@@ -39,7 +39,7 @@ const verifyEmailHtmlMarkup = function (session_id) {
           P.S. Dacă ai întrebări, ne poți contacta la 
           <a
             href="mailto:contact@restil.ro"
-            style="text-decoration: none; color: #3cb371">contact@restil</a>
+            style="text-decoration: none; color: #3cb371">contact@restil.ro</a>
         </p>
 
         <p style="margin: 20px 0">Echipa Restil</p>

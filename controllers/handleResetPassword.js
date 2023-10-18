@@ -24,6 +24,8 @@ const handleResetPassword = async (req, res, db) => {
     .returning("token")
     .then((token) => token[0]);
 
+  console.log(token);
+
   // Send email with reset password link
   const response = await sendEmailTo(
     email,

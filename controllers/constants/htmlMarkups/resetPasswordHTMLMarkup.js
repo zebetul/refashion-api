@@ -42,7 +42,7 @@ const resetPasswordHTMLMarkup = (token) => {
             href="mailto: contact@restil.ro"
             style="text-decoration: none; color: #3cb371"
           >
-            contact@restil
+            contact@restil.ro
           </a>
           .
         </p>
