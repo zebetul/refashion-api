@@ -38,7 +38,7 @@ const resetPasswordHTMLMarkup = (token) => {
         <p style="margin: 20px 0">
           P.S. Dacă ai întrebări, ne poți contacta la
           <a
-            href="mailto: contact@restil.ro"
+            href="mailto:contact@restil.ro"
             style="text-decoration: none; color: #3cb371"
           >
             contact@restil.ro
