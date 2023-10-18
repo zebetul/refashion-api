@@ -61,6 +61,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
       path: "/",
     });
 
+    // Sending verification email
     sendEmailTo(
       email,
       "Verifică-ți email-ul",

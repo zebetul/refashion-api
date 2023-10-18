@@ -40,6 +40,7 @@ import {
 import handleContactUs from "./controllers/contactUs.js";
 import handleSignOut from "./controllers/signOut.js";
 import handleVerifyEmail from "./controllers/verifyEmail.js";
+import handleResetPassword from "./controllers/handleResetPassword.js";
 
 const app = express();
 
@@ -130,6 +131,9 @@ app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) => handleRegister(req, res, dataBase, bcrypt));
 app.post("/google", (req, res) => handleToken(req, res, dataBase));
 app.post("/contact_us", (req, res) => handleContactUs(req, res, dataBase));
+app.post("/reset_password", (req, res) =>
+  handleResetPassword(req, res, dataBase)
+);
 
 // PRIVATE ROUTES
 app.get("/favorites/:id", authenticateUser, (req, res) =>
