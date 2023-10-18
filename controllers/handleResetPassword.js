@@ -1,4 +1,4 @@
-import { sendEmailTo } from "./helpers";
+import { sendEmailTo } from "./helpers.js";
 
 const handleResetPassword = async (req, res, db) => {
   const email = req.body.email;
