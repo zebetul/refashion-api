@@ -5,34 +5,48 @@ import resetPasswordHTMLMarkup from "./constants/htmlMarkups/resetPasswordHTMLMa
 const handleResetPassword = async (req, res, db) => {
   const email = req.body.email;
 
+  // Check if email is provided
   if (!email) {
     return res.json("Missing email");
   }
 
-  const user = await db("login").select("*").where("email", "=", email).first();
+  try {
+    // Get user from database
+    const user = await db("login")
+      .select("*")
+      .where("email", "=", email)
+      .first();
 
-  if (!user) {
-    return res.json("Email not found");
-  }
+    // If user doesn't exist, return error message
+    if (!user) {
+      return res.json("Email not found");
+    }
 
-  // Generate token
-  const token = await db("tokens")
-    .insert({
-      user_id: user.userid,
-      token: crypto.randomBytes(16).toString("hex"),
-    })
-    .returning("token")
-    .then((token) => token[0]);
+    // Generate token and store it in database
+    const token = await db("tokens")
+      .insert({
+        user_id: user.userid,
+        token: crypto.randomBytes(16).toString("hex"),
+      })
+      .returning("token")
+      .then((token) => token[0]);
 
-  // Send email with reset password link
-  const response = await sendEmailTo(
-    email,
-    "Reset password",
-    resetPasswordHTMLMarkup(token.token)
-  );
+    // Send email to user with reset password link containing token
+    await sendEmailTo(
+      email,
+      "Reset password",
+      resetPasswordHTMLMarkup(token.token)
+    );
 
-  if (response.error) {
-    return res.status(400).json({ error: response.error });
+    // Return success message
+    return res.json("Email sent");
+  } catch (err) {
+    console.log(err);
+
+    // Return error message
+    return res
+      .status(500)
+      .json(`🔥🔥🔥 Server error at reset_password: ${err.message}`);
   }
 };
 
