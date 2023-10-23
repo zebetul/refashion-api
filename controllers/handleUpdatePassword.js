@@ -34,7 +34,7 @@ const handleUpdatePassword = async function (req, res, db, bcrypt) {
     const hash = bcrypt.hashSync(password, 10);
 
     // Update user's password
-    await db("login").where("userid", "=", user.usreid).update({ hash });
+    await db("login").where("userid", "=", user.userid).update({ hash });
 
     // Delete token
     await db("tokens").where("token", "=", token).del();
