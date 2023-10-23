@@ -2,7 +2,7 @@ import { sendEmailTo } from "./helpers.js";
 import crypto from "crypto";
 import resetPasswordHTMLMarkup from "./constants/htmlMarkups/resetPasswordHTMLMarkup.js";
 
-const handleResetPassword = async (req, res, db) => {
+const handleResetPasswordRequest = async (req, res, db) => {
   const email = req.body.email;
 
   // Check if email is provided
@@ -50,4 +50,4 @@ const handleResetPassword = async (req, res, db) => {
   }
 };
 
-export default handleResetPassword;
+export default handleResetPasswordRequest;
