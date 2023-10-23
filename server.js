@@ -136,7 +136,7 @@ app.post("/reset_password", (req, res) =>
   handleResetPasswordRequest(req, res, dataBase)
 );
 app.post("/update_password/:token", (req, res) =>
-  handleUpdatePassword(req, res, dataBase)
+  handleUpdatePassword(req, res, dataBase, bcrypt)
 );
 
 // PRIVATE ROUTES

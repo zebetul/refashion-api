@@ -1,4 +1,4 @@
-const handleUpdatePassword = async (req, res, db, bcrypt) => {
+const handleUpdatePassword = async function (req, res, db, bcrypt) {
   const { token } = req.params;
   const { password } = req.body;
 
