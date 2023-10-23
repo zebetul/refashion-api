@@ -17,7 +17,7 @@ const resetPasswordHTMLMarkup = (token) => {
           </p>
 
           <a
-            href="http://localhost:3000/resetare-parola/${token}"
+            href="https://restil.ro/resetare-parola/${token}"
             style="
               text-decoration: none;
               color: #fff;
