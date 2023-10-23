@@ -12,6 +12,7 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
   const existingEmail = await dataBase("login")
     .returning("*")
     .where("email", "=", email);
+
   if (existingEmail.length > 0) return res.json("Email allready registered.");
 
   // Checking if userName allready exists and returning response if so

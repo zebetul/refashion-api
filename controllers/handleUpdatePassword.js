@@ -23,6 +23,8 @@ const handleUpdatePassword = async function (req, res, db, bcrypt) {
       .where("userid", "=", tokenFromDB.user_id)
       .first();
 
+    console.log(user);
+
     // If user doesn't exist, return error message
     if (!user) return res.json("User not found");
 
