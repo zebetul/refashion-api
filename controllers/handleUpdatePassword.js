@@ -15,9 +15,7 @@ const handleUpdatePassword = async (req, res, db, bcrypt) => {
       .first();
 
     // If token doesn't exist, return error message
-    if (!tokenFromDB) {
-      return res.json("Token not found");
-    }
+    if (!tokenFromDB) return res.json("Token not found");
 
     // Get user from database
     const user = await db("login")
@@ -26,9 +24,9 @@ const handleUpdatePassword = async (req, res, db, bcrypt) => {
       .first();
 
     // If user doesn't exist, return error message
-    if (!user) {
-      return res.json("User not found");
-    }
+    if (!user) return res.json("User not found");
+
+    console.log(password);
 
     // Hashing provided password
     const hash = bcrypt.hashSync(password, 10);
