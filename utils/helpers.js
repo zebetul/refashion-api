@@ -3,7 +3,7 @@ import { PutObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
-import { s3Client } from "../config.js";
+import { s3Client, REGION } from "../config.js";
 
 /**
  * Create an Amazon S3 service client object with credentials configuration. Then upload file to specified bucket.

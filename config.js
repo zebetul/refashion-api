@@ -22,9 +22,11 @@ export const ALLOWED_ORIGINS = [
   "https://www.restil.ro",
 ];
 
+export const REGION = "eu-north-1";
+
 // AWS S3 configuration
 export const s3Client = new S3Client({
-  region: "eu-north-1",
+  region: REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
