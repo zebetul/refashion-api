@@ -1,7 +1,7 @@
-import { getUserFromDB, newSession, sendEmailTo } from "./helpers.js";
-import verifyEmailHtmlMarkup from "./constants/htmlMarkups/verifyEmailHtmlMarkup.js";
+import { getUserFromDB, newSession, sendEmailTo } from "../utils/helpers.js";
+import verifyEmailHtmlMarkup from "../constants/htmlMarkups/verifyEmailHtmlMarkup.js";
 
-const handleRegister = async function (req, res, dataBase, bcrypt) {
+const handleUserRegistration = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;
 
   // INPUT VALIDATION
@@ -76,4 +76,5 @@ const handleRegister = async function (req, res, dataBase, bcrypt) {
     return res.status(400).json("Unable to register");
   }
 };
-export default handleRegister;
+
+export default handleUserRegistration;

@@ -12,4 +12,5 @@ const handleSignOut = async (req, res, dataBase) => {
     res.status(400).json("error deleting session");
   }
 };
+
 export default handleSignOut;

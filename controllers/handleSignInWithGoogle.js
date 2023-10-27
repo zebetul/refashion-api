@@ -1,6 +1,10 @@
-import { validateGoogleToken, getUserFromDB, newSession } from "./helpers.js";
+import {
+  validateGoogleToken,
+  getUserFromDB,
+  newSession,
+} from "../utils/helpers.js";
 
-const handleToken = async function (req, res, dataBase) {
+const handleSignInWithGoogle = async function (req, res, dataBase) {
   let payload;
   const { token } = req.body;
 
@@ -85,4 +89,4 @@ const handleToken = async function (req, res, dataBase) {
 
   return res.json(response);
 };
-export default handleToken;
+export default handleSignInWithGoogle;

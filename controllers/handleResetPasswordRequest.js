@@ -1,6 +1,6 @@
-import { sendEmailTo } from "./helpers.js";
+import { sendEmailTo } from "../utils/helpers.js";
 import crypto from "crypto";
-import resetPasswordHTMLMarkup from "./constants/htmlMarkups/resetPasswordHTMLMarkup.js";
+import resetPasswordHTMLMarkup from "../constants/htmlMarkups/resetPasswordHTMLMarkup.js";
 
 const handleResetPasswordRequest = async (req, res, db) => {
   const email = req.body.email;

@@ -1,4 +1,4 @@
-import { uploadImageToAWS, processImages } from "./helpers.js";
+import { uploadImageToAWS, processImages } from "../utils/helpers.js";
 
 export const handleNewItemUpload = async function (req, res, dataBase) {
   const {

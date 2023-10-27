@@ -1,22 +1,9 @@
 import sharp from "sharp";
-import {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectsCommand,
-} from "@aws-sdk/client-s3";
+import { PutObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 import { SESClient, SendEmailCommand } from "@aws-sdk/client-ses";
 import { OAuth2Client } from "google-auth-library";
 import crypto from "crypto";
-
-// AWS S3 configuration
-const REGION = "eu-north-1";
-const s3Client = new S3Client({
-  region: REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+import { s3Client } from "../config.js";
 
 /**
  * Create an Amazon S3 service client object with credentials configuration. Then upload file to specified bucket.
@@ -275,16 +262,12 @@ export const getUserFromDB = async function (userid, dataBase) {
 };
 
 export const validateGoogleToken = async function (token) {
-  const client = new OAuth2Client(
-    "717500630558-qqnuejf6pvdiiuo9kv0vsk65icurdjjh.apps.googleusercontent.com"
-  );
-  const secret = "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";
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   const ticket = await client.verifyIdToken({
     idToken: token,
     // Specify the CLIENT_ID of the Refashion client that accesses the backend
-    audience:
-      "717500630558-qqnuejf6pvdiiuo9kv0vsk65icurdjjh.apps.googleusercontent.com",
+    audience: process.env.GOOGLE_CLIENT_ID,
   });
 
   return ticket.getPayload();

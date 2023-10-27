@@ -1,6 +1,6 @@
-import { getConversations } from "./helpers.js";
+import { getConversations } from "../utils/helpers.js";
 
-const handleExchange = async (req, res, dataBase) => {
+const handleItemExchange = async (req, res, dataBase) => {
   const {
     senderID: sender_id,
     receiverID: receiver_id,
@@ -29,4 +29,4 @@ const handleExchange = async (req, res, dataBase) => {
   }
 };
 
-export default handleExchange;
+export default handleItemExchange;

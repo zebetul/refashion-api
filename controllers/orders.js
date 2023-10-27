@@ -1,4 +1,8 @@
-import { getOrders, getConversations, getUserFromDB } from "./helpers.js";
+import {
+  getOrders,
+  getConversations,
+  getUserFromDB,
+} from "../utils/helpers.js";
 
 export const handlePostOrder = async (req, res, dataBase) => {
   // Input validation

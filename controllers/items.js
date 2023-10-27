@@ -1,4 +1,4 @@
-import { deleteImagesFromAWS } from "./helpers.js";
+import { deleteImagesFromAWS } from "../utils/helpers.js";
 
 export const handleGetItems = async function (req, res, dataBase) {
   const response = {

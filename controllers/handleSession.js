@@ -1,4 +1,4 @@
-import { getUserFromDB } from "./helpers.js";
+import { getUserFromDB } from "../utils/helpers.js";
 
 const handleSession = async function (req, res, dataBase) {
   const { rfs_session_id } = req.cookies;

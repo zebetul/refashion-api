@@ -1,4 +1,4 @@
-import { getUserFromDB, newSession } from "./helpers.js";
+import { getUserFromDB, newSession } from "../utils/helpers.js";
 
 const handleSignIn = async function (req, res, dataBase, bcrypt) {
   try {
@@ -55,4 +55,5 @@ const handleSignIn = async function (req, res, dataBase, bcrypt) {
     res.status(400).json("error signing in");
   }
 };
+
 export default handleSignIn;

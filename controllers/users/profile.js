@@ -1,4 +1,4 @@
-import { getUserFromDB, deleteImagesFromAWS } from "../helpers.js";
+import { getUserFromDB, deleteImagesFromAWS } from "../../utils/helpers.js";
 
 export const handleProfileUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
