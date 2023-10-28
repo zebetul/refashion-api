@@ -46,7 +46,7 @@ import handleVerifyEmail from "./controllers/publicRoutes/handleVerifyEmail.js";
 import handleResetPasswordRequest from "./controllers/publicRoutes/handleResetPasswordRequest.js";
 import handleUpdatePassword from "./controllers/publicRoutes/handleUpdatePassword.js";
 import handleProfileGet from "./controllers/publicRoutes/handleProfileGet.js";
-import handleAdminRequest from "./controllers/privateRoutes/handleAdminRequest.js";
+import handleAdminRequest from "./controllers/adminRoutes/handleAdminRequest.js";
 
 const app = express();
 
@@ -86,7 +86,6 @@ app.get("/sessions", (req, res) => handleSession(req, res, dataBase));
 app.get("/verify-email/:session_id", (req, res) =>
   handleVerifyEmail(req, res, dataBase)
 );
-app.get("/admin_pannel", (req, res) => handleAdminRequest(req, res, dataBase));
 
 app.post("/signin", (req, res) => handleSignIn(req, res, dataBase, bcrypt));
 app.post("/register", (req, res) =>
@@ -152,6 +151,9 @@ app.delete("/orders", authorizeUser, (req, res) =>
 app.delete("/users/profile/:id", authorizeUser, (req, res) =>
   handleDeleteProfile(req, res, dataBase)
 );
+
+// ADMIN ROUTES
+app.get("/admin_pannel", (req, res) => handleAdminRequest(req, res, dataBase));
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
