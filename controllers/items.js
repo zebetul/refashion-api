@@ -23,7 +23,9 @@ export const handleGetItems = async function (req, res, dataBase) {
 
     console.log(priceObject);
 
-    response.topPrice = +priceObject[0].price;
+    priceObject.length
+      ? (response.topPrice = +priceObject[0].price)
+      : (response.topPrice = 0);
 
     // Joining the items and images tables together and extracting them
     let query = dataBase("items")
