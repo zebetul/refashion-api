@@ -9,7 +9,7 @@ export const dataBase = knex({
     password: process.env.PSQL_PASSWORD,
     host: process.env.PSQL_HOST,
     port: process.env.PSQL_PORT,
-    database: "restil",
+    database: "restil_xirm",
   },
 });
 
