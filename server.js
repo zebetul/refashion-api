@@ -6,43 +6,46 @@ import cookieParser from "cookie-parser";
 
 import { dataBase, PORT, ALLOWED_ORIGINS } from "./config.js";
 import authorizeUser from "./middlewares/authorization.js";
-import handleUserRegistration from "./controllers/handleUserRegistration.js";
-import handleSignIn from "./controllers/handleSignIn.js";
+import handleUserRegistration from "./controllers/publicRoutes/handleUserRegistration.js";
+import handleSignIn from "./controllers/publicRoutes/handleSignIn.js";
 import {
   handleProfileUpdate,
-  handleProfileGet,
   handleDeleteProfile,
-} from "./controllers/users/profile.js";
+  handleProfileImageUpload,
+} from "./controllers/privateRoutes/profile.js";
 import {
   handleGetItems,
   handleGetItemById,
-  handleDeleteItem,
-} from "./controllers/items.js";
-import { handleMessage, markMessagesAsRead } from "./controllers/messages.js";
+} from "./controllers/publicRoutes/items.js";
+import {
+  handleMessage,
+  markMessagesAsRead,
+} from "./controllers/privateRoutes/messages.js";
 import {
   handleNewItemUpload,
-  handleGetUserWardrobe,
   handleItemUpdate,
-} from "./controllers/wardrobe.js";
-import handleProfileImageUpload from "./controllers/users/handleProfileImageUpload.js";
+  handleDeleteItem,
+} from "./controllers/privateRoutes/wardrobe.js";
+import handleGetUserWardrobe from "./controllers/publicRoutes/handleGetUserWardrobe.js";
 import {
   handleAddToFavorites,
   handleDeleteFavorites,
   handleGetFavorites,
-} from "./controllers/favorites.js";
-import handleSignInWithGoogle from "./controllers/handleSignInWithGoogle.js";
-import handleSession from "./controllers/handleSession.js";
-import handleItemExchange from "./controllers/handleItemExchange.js";
+} from "./controllers/privateRoutes/favorites.js";
+import handleSignInWithGoogle from "./controllers/publicRoutes/handleSignInWithGoogle.js";
+import handleSession from "./controllers/publicRoutes/handleSession.js";
+import handleItemExchange from "./controllers/privateRoutes/handleItemExchange.js";
 import {
   handleUpdateStatus,
   handleDeleteOrder,
   handlePostOrder,
-} from "./controllers/orders.js";
-import handleContactUs from "./controllers/handleContactUs.js";
-import handleSignOut from "./controllers/handleSignOut.js";
-import handleVerifyEmail from "./controllers/handleVerifyEmail.js";
-import handleResetPasswordRequest from "./controllers/handleResetPasswordRequest.js";
-import handleUpdatePassword from "./controllers/handleUpdatePassword.js";
+} from "./controllers/privateRoutes/orders.js";
+import handleContactUs from "./controllers/publicRoutes/handleContactUs.js";
+import handleSignOut from "./controllers/privateRoutes/handleSignOut.js";
+import handleVerifyEmail from "./controllers/publicRoutes/handleVerifyEmail.js";
+import handleResetPasswordRequest from "./controllers/publicRoutes/handleResetPasswordRequest.js";
+import handleUpdatePassword from "./controllers/publicRoutes/handleUpdatePassword.js";
+import handleProfileGet from "./controllers/publicRoutes/handleProfileGet.js";
 
 const app = express();
 

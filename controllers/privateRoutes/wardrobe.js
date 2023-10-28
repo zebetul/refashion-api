@@ -1,4 +1,8 @@
-import { uploadImageToAWS, processImages } from "../utils/helpers.js";
+import {
+  uploadImageToAWS,
+  processImages,
+  deleteImagesFromAWS,
+} from "../../utils/helpers.js";
 
 export const handleNewItemUpload = async function (req, res, dataBase) {
   const {
@@ -75,37 +79,6 @@ export const handleNewItemUpload = async function (req, res, dataBase) {
   }
 };
 
-export const handleGetUserWardrobe = async function (req, res, dataBase) {
-  const { id } = req.params;
-  const { _sort: sort } = req.query;
-
-  try {
-    let query = dataBase("items")
-      .select("items.*", dataBase.raw("ARRAY_AGG(images.url) AS images"))
-      .leftJoin("images", "items.itemid", "images.itemid")
-      .where("items.userid", id)
-      .groupBy("items.itemid");
-
-    // Apply sorting if provided
-    if (sort) {
-      const [column, order] = sort.split(":");
-      query = query.orderBy(column, order);
-    }
-
-    const wardrobe = await query;
-
-    // Check if the user's wardrobe exists
-    if (wardrobe) {
-      res.json(wardrobe);
-    } else {
-      res.status(404).json("User's wardrobe not found");
-    }
-  } catch (err) {
-    console.error(err);
-    res.status(500).json("Server error");
-  }
-};
-
 export const handleItemUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
 
@@ -149,5 +122,33 @@ export const handleItemUpdate = async function (req, res, dataBase) {
   } catch (err) {
     console.error(err);
     res.status(500).json("Server error");
+  }
+};
+
+export const handleDeleteItem = async function (req, res, dataBase) {
+  const { itemID, userID, imagesNr } = req.body;
+
+  try {
+    // Delete item from the items table
+    const deletedItem = await dataBase("items")
+      .where("itemid", itemID)
+      .del()
+      .returning("*");
+
+    // Delete images from AWS S3 bucket
+    const Objects = [];
+    for (let i = 0; i < imagesNr; i++) {
+      Objects.push({ Key: `${userID}/item-${itemID}/${i}.jpeg` });
+    }
+    await deleteImagesFromAWS(Objects, "rfsimages");
+
+    if (deletedItem) {
+      res.json(deletedItem);
+    } else {
+      res.status(404).json({ error: "Item not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Something went wrong" });
   }
 };

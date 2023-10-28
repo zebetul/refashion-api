@@ -1,5 +1,5 @@
-import { getUserFromDB, newSession, sendEmailTo } from "../utils/helpers.js";
-import verifyEmailHtmlMarkup from "../constants/htmlMarkups/verifyEmailHtmlMarkup.js";
+import { getUserFromDB, newSession, sendEmailTo } from "../../utils/helpers.js";
+import verifyEmailHtmlMarkup from "../../constants/htmlMarkups/verifyEmailHtmlMarkup.js";
 
 const handleUserRegistration = async function (req, res, dataBase, bcrypt) {
   const { userName, email, password } = req.body;

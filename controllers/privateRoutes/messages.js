@@ -1,4 +1,4 @@
-import { getConversations } from "../utils/helpers.js";
+import { getConversations } from "../../utils/helpers.js";
 
 export const handleMessage = async function (req, res, dataBase) {
   const { senderID, receiverID, content, senderName, receiverName } = req.body;

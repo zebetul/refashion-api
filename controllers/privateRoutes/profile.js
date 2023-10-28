@@ -1,4 +1,42 @@
-import { getUserFromDB, deleteImagesFromAWS } from "../../utils/helpers.js";
+import {
+  getUserFromDB,
+  deleteImagesFromAWS,
+  processImages,
+  uploadImageToAWS,
+} from "../../utils/helpers.js";
+
+export const handleProfileImageUpload = async function (req, res, dataBase) {
+  const { imageFile } = req.files;
+  const { userID } = req.body;
+
+  // Create unique imageKey = userID
+  const imageKey = `userprofile-${userID}`;
+
+  // Process image with sharp library. Resize to 600x800 pixels and convert to jpeg with 80% quality.
+  const processedImage = await processImages(imageFile);
+
+  // Upload image to AWS S3 rfsimages bucket and get the URL
+  const imageURL = await uploadImageToAWS(
+    processedImage,
+    "rfs-user-images",
+    imageKey
+  );
+
+  if (typeof imageURL[0] !== "string")
+    return res.status(400).json("🔥🔥🔥 Fail to upload image to AWS!");
+
+  // Insert image URL in database in users table
+  const user = await dataBase("users")
+    .update({
+      image: imageURL[0],
+    })
+    .where("userid", "=", userID)
+    .returning("*");
+
+  // Returning image URL
+  res.json(user[0].image);
+};
+export default handleProfileImageUpload;
 
 export const handleProfileUpdate = async function (req, res, dataBase) {
   const { id } = req.params;
@@ -22,21 +60,6 @@ export const handleProfileUpdate = async function (req, res, dataBase) {
   } catch (err) {
     console.error(err);
     // Server error
-    res.status(500).json("🔥🔥🔥Database error: not connecting");
-  }
-};
-
-export const handleProfileGet = async function (req, res, dataBase) {
-  const { id } = req.params;
-
-  try {
-    const user = await dataBase("users").select("*").where("userid", "=", id);
-
-    user.length
-      ? res.json(user[0])
-      : res.json("Database error: user not found");
-  } catch (err) {
-    console.error(err);
     res.status(500).json("🔥🔥🔥Database error: not connecting");
   }
 };

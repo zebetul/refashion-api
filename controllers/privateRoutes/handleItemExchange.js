@@ -1,4 +1,4 @@
-import { getConversations } from "../utils/helpers.js";
+import { getConversations } from "../../utils/helpers.js";
 
 const handleItemExchange = async (req, res, dataBase) => {
   const {

@@ -1,4 +1,4 @@
-import { getUserFromDB, newSession } from "../utils/helpers.js";
+import { getUserFromDB, newSession } from "../../utils/helpers.js";
 
 const handleSignIn = async function (req, res, dataBase, bcrypt) {
   try {

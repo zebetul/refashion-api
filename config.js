@@ -1,7 +1,17 @@
-import knex from "knex";
 import { S3Client } from "@aws-sdk/client-s3";
+import knex from "knex";
 
-// Connecting to database
+export const PORT = process.env.PORT || 8000;
+
+// Allowed origins for CORS configuration
+export const ALLOWED_ORIGINS = [
+  "http://localhost:3000",
+  "https://restil.onrender.com",
+  "https://restil.ro",
+  "https://www.restil.ro",
+];
+
+// Database configuration
 export const dataBase = knex({
   client: "pg",
   connection: {
@@ -13,18 +23,8 @@ export const dataBase = knex({
   },
 });
 
-export const PORT = process.env.PORT || 8000;
-
-export const ALLOWED_ORIGINS = [
-  "http://localhost:3000",
-  "https://restil.onrender.com",
-  "https://restil.ro",
-  "https://www.restil.ro",
-];
-
-export const REGION = "eu-north-1";
-
 // AWS S3 configuration
+export const REGION = "eu-north-1";
 export const s3Client = new S3Client({
   region: REGION,
   credentials: {

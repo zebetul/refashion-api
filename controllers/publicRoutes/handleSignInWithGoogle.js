@@ -2,7 +2,7 @@ import {
   validateGoogleToken,
   getUserFromDB,
   newSession,
-} from "../utils/helpers.js";
+} from "../../utils/helpers.js";
 
 const handleSignInWithGoogle = async function (req, res, dataBase) {
   let payload;
