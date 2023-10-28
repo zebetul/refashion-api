@@ -46,7 +46,7 @@ const handleResetPasswordRequest = async (req, res, db) => {
     // Return error message
     return res
       .status(500)
-      .json(`🔥🔥🔥 Server error at reset_password: ${err.message}`);
+      .json(`🔥🔥🔥 Server error at reset_password: ${err}`);
   }
 };
 
