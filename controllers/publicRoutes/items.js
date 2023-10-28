@@ -19,8 +19,6 @@ export const handleGetItems = async function (req, res, dataBase) {
       .orderBy("price", "desc")
       .limit(1);
 
-    console.log(priceObject);
-
     priceObject.length
       ? (response.topPrice = +priceObject[0].price)
       : (response.topPrice = 0);
