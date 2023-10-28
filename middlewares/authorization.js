@@ -20,7 +20,7 @@ const authorizeUser = async function (req, res, next) {
     .first();
 
   if (!session) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json("Unauthorized");
   }
 
   next();
