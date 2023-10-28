@@ -5,7 +5,8 @@ import fileupload from "express-fileupload";
 import cookieParser from "cookie-parser";
 
 import { dataBase, PORT, ALLOWED_ORIGINS } from "./config.js";
-import authorizeUser from "./middlewares/authorization.js";
+import authorizeUser from "./middlewares/authorizeUser.js";
+import authorizeAdmin from "./middlewares/authorizeAdmin.js";
 import handleUserRegistration from "./controllers/publicRoutes/handleUserRegistration.js";
 import handleSignIn from "./controllers/publicRoutes/handleSignIn.js";
 import {
@@ -153,7 +154,7 @@ app.delete("/users/profile/:id", authorizeUser, (req, res) =>
 );
 
 // ADMIN ROUTES
-app.get("/admin_pannel", authorizeUser, (req, res) =>
+app.get("/admin_pannel", authorizeUser, authorizeAdmin, (req, res) =>
   handleAdminRequest(req, res, dataBase)
 );
 
