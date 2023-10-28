@@ -21,6 +21,8 @@ export const handleGetItems = async function (req, res, dataBase) {
       .orderBy("price", "desc")
       .limit(1);
 
+    console.log(priceObject);
+
     response.topPrice = +priceObject[0].price;
 
     // Joining the items and images tables together and extracting them
