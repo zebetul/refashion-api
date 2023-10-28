@@ -10,9 +10,13 @@ const authorizeAdmin = async (req, res, next) => {
 
   const userEmail = await dataBase("login")
     .select("*")
-    .where("userid", "=", userID.user_id);
+    .where("userid", "=", userID.user_id)
+    .first();
 
   console.log(userEmail);
+
+  if (userEmail.email !== process.env.ADMIN_EMAIL)
+    return res.status(401).json("Unauthorized");
 
   next();
 };
