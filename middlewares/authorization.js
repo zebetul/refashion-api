@@ -10,7 +10,7 @@ const authorizeUser = async function (req, res, next) {
   const { rfs_session_id } = req.cookies;
 
   if (!rfs_session_id) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json("Unauthorized");
   }
 
   // Check if the sessionID is in the database
