@@ -58,6 +58,7 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
         email,
         email_verified,
         joined: new Date(),
+        last_loggedin: new Date(),
         image: picture,
       });
       await trx.commit();

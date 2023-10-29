@@ -40,6 +40,7 @@ const handleUserRegistration = async function (req, res, dataBase, bcrypt) {
       name: userName,
       email: email,
       joined: new Date(),
+      last_loggedin: new Date(),
     });
 
     await trx.commit();
