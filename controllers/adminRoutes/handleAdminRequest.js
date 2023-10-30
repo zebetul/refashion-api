@@ -10,10 +10,15 @@ const handleAdminRequest = async (req, res, dataBase) => {
       .count("userid")
       .where({ hash: "google" });
 
+    const activeSessions = await dataBase("sessions")
+      .count("session_id")
+      .where("expires_at", ">", Date.now());
+
     res.json({
       usersTotal: usersTotal[0].count,
       usersEmailVerified: usersEmailVerified[0].count,
       usersGoogle: usersGoogle[0].count,
+      activeSessions: +activeSessions[0].count,
     });
   } catch (err) {
     console.log(err);
