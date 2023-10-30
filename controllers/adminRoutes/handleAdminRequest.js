@@ -18,7 +18,8 @@ const handleAdminRequest = async (req, res, dataBase) => {
         dataBase.raw("to_timestamp(?)", Date.now() / 1000)
       );
 
-    const sellers = await dataBase("items").count("userid");
+    // Get unique sellers
+    const sellers = await dataBase("items").countDistinct("userid");
 
     res.json({
       usersTotal: usersTotal[0].count,
