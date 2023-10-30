@@ -18,11 +18,14 @@ const handleAdminRequest = async (req, res, dataBase) => {
         dataBase.raw("to_timestamp(?)", Date.now() / 1000)
       );
 
+    const sellers = await dataBase("items").count("userid");
+
     res.json({
       usersTotal: usersTotal[0].count,
       usersEmailVerified: usersEmailVerified[0].count,
       usersGoogle: usersGoogle[0].count,
       activeSessions: activeSessions[0].count,
+      sellers: sellers[0].count,
     });
   } catch (err) {
     console.log(err);
