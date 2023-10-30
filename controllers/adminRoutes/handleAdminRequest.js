@@ -8,7 +8,7 @@ const handleAdminRequest = async (req, res, dataBase) => {
 
     const usersGoogle = await dataBase("login")
       .count("userid")
-      .where({ password: "google" });
+      .where({ hash: "google" });
 
     res.json({
       usersTotal: usersTotal[0].count,
