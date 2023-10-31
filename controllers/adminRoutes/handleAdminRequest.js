@@ -2,16 +2,16 @@ const handleAdminRequest = async (req, res, dataBase) => {
   try {
     const usersTotal = await dataBase("login").count("userid");
 
-    const usersEmailVerified = await dataBase("users")
-      .count("userid")
-      .where({ email_verified: true });
-
     const usersGoogle = await dataBase("login")
       .count("userid")
       .where({ hash: "google" });
 
+    const usersEmailVerified = await dataBase("users")
+      .count("userid")
+      .where({ email_verified: true });
+
     const activeSessions = await dataBase("sessions")
-      .count("session_id")
+      .countDistinct("user_id")
       .where(
         "expires_at",
         ">",
