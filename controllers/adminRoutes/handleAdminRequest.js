@@ -18,8 +18,12 @@ const handleAdminRequest = async (req, res, dataBase) => {
         dataBase.raw("to_timestamp(?)", Date.now() / 1000)
       );
 
-    // Get unique sellers
     const sellers = await dataBase("items").countDistinct("userid");
+
+    // Querry for an array of all the dates when users joined
+    const joined = await dataBase("users")
+      .select("joined")
+      .orderBy("joined", "asc");
 
     res.json({
       usersTotal: usersTotal[0].count,
@@ -27,6 +31,7 @@ const handleAdminRequest = async (req, res, dataBase) => {
       usersGoogle: usersGoogle[0].count,
       activeSessions: activeSessions[0].count,
       sellers: sellers[0].count,
+      joined: joined.map((date) => date.joined),
     });
   } catch (err) {
     console.log(err);
