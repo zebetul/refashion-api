@@ -1,3 +1,4 @@
+import canceledOrderHTMLMarkup from "../../constants/htmlMarkups/canceledOrderHTMLMarkup.js";
 import newOrderHTMLMarkup from "../../constants/htmlMarkups/newOrderHTMLMarkup.js";
 import {
   getOrders,
@@ -90,10 +91,23 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
   const { orderId, status, userID } = req.body;
 
   try {
-    await dataBase("orders")
+    // Update and return updated order
+    const order = await dataBase("orders")
       .where({ order_id: orderId })
       .update({ status, last_status_update: new Date() })
       .returning("*");
+
+    const buyer = await dataBase("login")
+      .where({ userid: order[0].buyer_id })
+      .select("email");
+
+    const { email } = buyer[0];
+
+    const seller = await dataBase("users").where({
+      userid: order[0].seller_id,
+    });
+
+    const { name: sellerUserName } = seller[0];
 
     if (req.body.deliveryMethod) {
       await dataBase("orders").where({ order_id: orderId }).update({
@@ -107,7 +121,7 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
         cancel_reason: req.body.cancelReason,
       });
 
-      // Flag all item from itemsID array to status ''
+      // Flag all items from itemsID array to status ''
       const itemsID = await dataBase("orders")
         .select("items_id")
         .where({ order_id: orderId });
@@ -117,6 +131,13 @@ export const handleUpdateStatus = async (req, res, dataBase) => {
           .where({ itemid: item_id })
           .update({ status: "" });
       });
+
+      // Send email to buyer
+      sendEmailTo(
+        email,
+        `Comandă anulată de către ${sellerUserName}`,
+        canceledOrderHTMLMarkup(sellerUserName, req.body.cancelReason)
+      );
     }
 
     // If status is Finalizată flag all item from itemsID array to status 'sold'
