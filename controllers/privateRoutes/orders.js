@@ -2,6 +2,7 @@ import {
   getOrders,
   getConversations,
   getUserFromDB,
+  sendEmailTo,
 } from "../../utils/helpers.js";
 
 export const handlePostOrder = async (req, res, dataBase) => {
@@ -56,6 +57,14 @@ export const handlePostOrder = async (req, res, dataBase) => {
 
     // Get user from database
     const updatedUser = await getUserFromDB(order[0].buyer_id, dataBase);
+
+    // Send email to seller
+
+    sendEmailTo(
+      updatedUser.email,
+      "Comandă nouă",
+      `<p>Salut, ai primit o comandă nouă de la ${updatedUser.first_name} ${updatedUser.last_name}.</p>`
+    );
 
     res.json(updatedUser);
   } catch (err) {
