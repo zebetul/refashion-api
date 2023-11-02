@@ -1,3 +1,4 @@
+import newOrderHTMLMarkup from "../../constants/htmlMarkups/newOrderHTMLMarkup.js";
 import {
   getOrders,
   getConversations,
@@ -67,8 +68,11 @@ export const handlePostOrder = async (req, res, dataBase) => {
 
     sendEmailTo(
       email,
-      "Comandă nouă",
-      `<p>Salut, ai primit o comandă nouă de la ${updatedUser.first_name} ${updatedUser.last_name}.</p>`
+      `Comandă nouă de la ${updatedUser.first_name} ${updatedUser.last_name}`,
+      newOrderHTMLMarkup(
+        `${updatedUser.first_name} ${updatedUser.last_name}`,
+        newMessage.content
+      )
     );
 
     res.json(updatedUser);
