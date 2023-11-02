@@ -22,25 +22,25 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
     payload;
 
   // CHECK IF USER ALREADY EXISTS
-  let data = await dataBase("login").select("*").where("email", "=", email);
+  let user = await dataBase("login").select("*").where("email", "=", email);
 
   // CASE 1. User registered with email and password
-  if (data.length > 0 && data[0].hash !== "google") {
+  if (user.length > 0 && user[0].hash !== "google") {
     return res.json(email);
   }
 
   // CASE 2. User allready registered with google account
-  if (data.length > 0 && data[0].hash === "google") {
+  if (user.length > 0 && user[0].hash === "google") {
     // update the user's last login time
     await dataBase("users")
       .update({
         last_loggedin: new Date(),
       })
-      .where("userid", "=", data[0].userid);
+      .where("userid", "=", user[0].userid);
   }
 
   // CASE 3. User doesn't exist, create new user and return it
-  if (data.length === 0) {
+  if (user.length === 0) {
     const trx = await dataBase.transaction();
 
     try {
@@ -64,7 +64,7 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
 
       await trx.commit();
 
-      data = newUser;
+      user = newUser;
 
       // Error handling
     } catch (err) {
@@ -74,10 +74,10 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
   }
 
   // Retreiving the new user from the database
-  const response = await getUserFromDB(data[0].userid, dataBase);
+  const response = await getUserFromDB(user[0].userid, dataBase);
 
   // Create a session for the user
-  const session = await newSession(data[0].userid, dataBase);
+  const session = await newSession(user[0].userid, dataBase);
 
   const { session_id, expires_at } = session;
 
