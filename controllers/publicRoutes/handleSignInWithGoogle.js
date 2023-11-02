@@ -22,7 +22,7 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
     payload;
 
   // CHECK IF USER ALREADY EXISTS
-  const data = await dataBase("login").select("*").where("email", "=", email);
+  let data = await dataBase("login").select("*").where("email", "=", email);
 
   // CASE 1. User registered with email and password
   if (data.length > 0 && data[0].hash !== "google") {
@@ -50,7 +50,7 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
         hash: "google",
       });
 
-      const data = await trx("users").returning("*").insert({
+      await trx("users").returning("*").insert({
         userid: newUser[0].userid,
         name,
         first_name: given_name,
@@ -61,7 +61,10 @@ const handleSignInWithGoogle = async function (req, res, dataBase) {
         last_loggedin: new Date(),
         image: picture,
       });
+
       await trx.commit();
+
+      data = newUser;
 
       // Error handling
     } catch (err) {
