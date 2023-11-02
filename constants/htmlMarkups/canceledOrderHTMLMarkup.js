@@ -17,7 +17,7 @@ const canceledOrderHTMLMarkup = (sellerUserName, cancelReason) => {
   <p style="margin: 0 0 40px 0; font-style: italic">${cancelReason}</p>
 
   <a
-    href="https://restil.ro/userpage/orders#received"
+    href="https://restil.ro/userpage/orders#sent"
     style="
       text-decoration: none;
       color: #fff;
