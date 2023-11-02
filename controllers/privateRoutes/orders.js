@@ -59,9 +59,14 @@ export const handlePostOrder = async (req, res, dataBase) => {
     const updatedUser = await getUserFromDB(order[0].buyer_id, dataBase);
 
     // Send email to seller
+    const seller = await dataBase("login")
+      .where({ userid: order[0].seller_id })
+      .select("email");
+
+    const { email } = seller[0];
 
     sendEmailTo(
-      updatedUser.email,
+      email,
       "Comandă nouă",
       `<p>Salut, ai primit o comandă nouă de la ${updatedUser.first_name} ${updatedUser.last_name}.</p>`
     );
