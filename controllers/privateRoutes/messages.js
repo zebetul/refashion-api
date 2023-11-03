@@ -9,6 +9,7 @@ export const handleMessage = async function (req, res, dataBase) {
     return res.json("Missing required fields.");
 
   try {
+    // Insert message into database
     await dataBase("messages")
       .insert({
         sender_id: senderID,
@@ -19,11 +20,13 @@ export const handleMessage = async function (req, res, dataBase) {
       })
       .returning("*");
 
+    // Get conversations to send back to client
     const conversations = await getConversations(senderID, dataBase);
 
+    // Get receiver email
     const receiver = await dataBase("login")
       .select("email")
-      .where({ id: receiverID });
+      .where({ userid: receiverID });
 
     const receiverEmail = receiver[0].email;
 
