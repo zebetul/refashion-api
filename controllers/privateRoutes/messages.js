@@ -1,4 +1,5 @@
-import { getConversations } from "../../utils/helpers.js";
+import newMessageReceivedHTMLMarkup from "../../constants/htmlMarkups/newMessageReceivedHTMLMarkup.js";
+import { getConversations, sendEmailTo } from "../../utils/helpers.js";
 
 export const handleMessage = async function (req, res, dataBase) {
   const { senderID, receiverID, content, senderName, receiverName } = req.body;
@@ -8,7 +9,7 @@ export const handleMessage = async function (req, res, dataBase) {
     return res.json("Missing required fields.");
 
   try {
-    const data = await dataBase("messages")
+    await dataBase("messages")
       .insert({
         sender_id: senderID,
         receiver_id: receiverID,
@@ -19,6 +20,19 @@ export const handleMessage = async function (req, res, dataBase) {
       .returning("*");
 
     const conversations = await getConversations(senderID, dataBase);
+
+    const receiver = await dataBase("login")
+      .select("email")
+      .where({ id: receiverID });
+
+    const receiverEmail = receiver[0].email;
+
+    // Send email to receiver
+    sendEmailTo(
+      receiverEmail,
+      `Mesaj nou de la ${senderName}`,
+      newMessageReceivedHTMLMarkup(senderName, content)
+    );
 
     conversations
       ? res.json(conversations)
