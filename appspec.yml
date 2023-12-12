@@ -12,8 +12,8 @@ permissions:
 
 hooks:
   ApplicationStop:
-    - location: /home/ec2-user/configs/stop_server.sh
+    - location: /home/ec2-user/configs/deployement_scripts/stop_server.sh
       timeout: 300
   ApplicationStart:
-    - location: /home/ec2-user/configs/start_server.sh
+    - location: /home/ec2-user/configs/deployement_scripts/start_server.sh
       timeout: 300
