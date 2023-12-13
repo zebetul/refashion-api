@@ -9,16 +9,15 @@ permissions:
     pattern: "**"
     owner: ec2-user
     group: ec2-user
+# hooks:
+#   ApplicationStop:
+#     - location: /home/ec2-user/configs/deployement_scripts/stop_server.sh
+#       timeout: 300
 
-hooks:
-  ApplicationStop:
-    - location: /home/ec2-user/configs/deployement_scripts/stop_server.sh
-      timeout: 300
+#   ApplicationStart:
+#     - location: /home/ec2-user/configs/deployement_scripts/start_server.sh
+#       timeout: 300
 
-  ApplicationStart:
-    - location: /home/ec2-user/configs/deployement_scripts/start_server.sh
-      timeout: 300
-
-  AfterInstall:
-    - location: /home/ec2-user/configs/deployment_scripts/install.sh
-      timeout: 300
+#   AfterInstall:
+#     - location: /home/ec2-user/configs/deployment_scripts/install.sh
+#       timeout: 300
