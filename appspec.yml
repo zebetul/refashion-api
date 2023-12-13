@@ -19,6 +19,6 @@ hooks:
     Install:
     - location: /home/ec2-user/configs/deployment_scripts/install.sh
       timeout: 300
-    AfterInstall:
-    - location: /home/ec2-user/configs/deployment_scripts/after_install.sh
-      timeout: 300
+    # AfterInstall:
+    # - location: /home/ec2-user/configs/deployment_scripts/after_install.sh
+    #   timeout: 300
