@@ -154,10 +154,10 @@ app.delete("/users/profile/:id", authorizeUser, (req, res) =>
 );
 
 // ADMIN ROUTES
-app.get("/admin_pannel", (req, res) => handleAdminRequest(req, res, dataBase));
-// app.get("/admin_pannel", authorizeUser, authorizeAdmin, (req, res) =>
-//   handleAdminRequest(req, res, dataBase)
-// );
+// app.get("/admin_pannel", (req, res) => handleAdminRequest(req, res, dataBase));
+app.get("/admin_pannel", authorizeUser, authorizeAdmin, (req, res) =>
+  handleAdminRequest(req, res, dataBase)
+);
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
