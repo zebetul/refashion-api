@@ -60,6 +60,7 @@ const corsOptions = {
     }
   },
   credentials: true, // Allow credentials to be sent
+  allowedHeaders: ["Content-Type"],
 };
 
 app.use(express.json());
